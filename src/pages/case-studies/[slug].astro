@@ -1,0 +1,149 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getAllCaseStudies, getCaseStudyBySlug } from "@/lib/notion";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const caseStudies = await getAllCaseStudies();
+  return caseStudies.map((cs) => ({
+    params: { slug: cs.slug },
+  }));
+};
+
+const { slug } = Astro.params;
+const caseStudy = await getCaseStudyBySlug(slug!);
+
+if (!caseStudy) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout title={`${caseStudy.title} — Portfolio`} description={caseStudy.summary}>
+  <!-- Back link -->
+  <div class="max-w-3xl mx-auto px-6 pt-10">
+    <a
+      href="/"
+      class="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-900 transition-colors"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      All case studies
+    </a>
+  </div>
+
+  <!-- Hero -->
+  <header class="max-w-3xl mx-auto px-6 pt-10 pb-12">
+    <div class="flex items-center gap-2 flex-wrap mb-5">
+      {
+        caseStudy.tags.map((tag) => (
+          <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-600">
+            {tag}
+          </span>
+        ))
+      }
+    </div>
+
+    <h1 class="text-4xl font-bold tracking-tight text-zinc-900 mb-4">
+      {caseStudy.title}
+    </h1>
+
+    <p class="text-xl text-zinc-500 leading-relaxed">
+      {caseStudy.summary}
+    </p>
+
+    <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 pt-8 border-t border-zinc-100">
+      <div>
+        <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">Client</dt>
+        <dd class="text-sm font-semibold text-zinc-900">{caseStudy.client}</dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">Year</dt>
+        <dd class="text-sm font-semibold text-zinc-900">{caseStudy.year}</dd>
+      </div>
+    </div>
+  </header>
+
+  <!-- Cover image -->
+  {
+    caseStudy.coverImage && (
+      <div class="max-w-5xl mx-auto px-6 mb-16">
+        <img
+          src={caseStudy.coverImage}
+          alt={caseStudy.title}
+          class="w-full rounded-2xl aspect-video object-cover bg-zinc-50"
+        />
+      </div>
+    )
+  }
+
+  <!-- Context blocks -->
+  {
+    (caseStudy.challenge || caseStudy.solution || caseStudy.outcome) && (
+      <section class="max-w-3xl mx-auto px-6 mb-16 grid gap-8 sm:grid-cols-3">
+        {caseStudy.challenge && (
+          <div class="rounded-xl bg-zinc-50 p-6">
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">Challenge</h3>
+            <p class="text-sm text-zinc-700 leading-relaxed">{caseStudy.challenge}</p>
+          </div>
+        )}
+        {caseStudy.solution && (
+          <div class="rounded-xl bg-zinc-50 p-6">
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">Solution</h3>
+            <p class="text-sm text-zinc-700 leading-relaxed">{caseStudy.solution}</p>
+          </div>
+        )}
+        {caseStudy.outcome && (
+          <div class="rounded-xl bg-zinc-50 p-6">
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">Outcome</h3>
+            <p class="text-sm text-zinc-700 leading-relaxed">{caseStudy.outcome}</p>
+          </div>
+        )}
+      </section>
+    )
+  }
+
+  <!-- Rich content blocks -->
+  {
+    caseStudy.content && caseStudy.content.length > 0 && (
+      <article class="max-w-3xl mx-auto px-6 mb-24 space-y-8">
+        {caseStudy.content.map((block) => {
+          if (block.type === "heading") {
+            return (
+              <h2 class="text-2xl font-bold text-zinc-900 pt-4">{block.text}</h2>
+            );
+          }
+          if (block.type === "paragraph") {
+            return (
+              <p class="text-base text-zinc-600 leading-relaxed">{block.text}</p>
+            );
+          }
+          if (block.type === "quote") {
+            return (
+              <blockquote class="border-l-4 border-zinc-900 pl-5 italic text-zinc-700 text-lg">
+                {block.text}
+              </blockquote>
+            );
+          }
+          if (block.type === "image") {
+            return (
+              <figure>
+                <img
+                  src={block.url}
+                  alt={block.alt ?? ""}
+                  class="w-full rounded-xl bg-zinc-50"
+                  loading="lazy"
+                />
+                {block.alt && (
+                  <figcaption class="mt-2 text-center text-xs text-zinc-400">
+                    {block.alt}
+                  </figcaption>
+                )}
+              </figure>
+            );
+          }
+        })}
+      </article>
+    )
+  }
+</Layout>
