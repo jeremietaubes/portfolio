@@ -118,8 +118,8 @@ function notionPageToCaseStudy(page: any): CaseStudy {
     id: page.id,
     slug: props.Slug?.rich_text?.length
       ? richTextToString(props.Slug.rich_text)
-      : pageToSlug(richTextToString(props.Title.title)),
-    title: richTextToString(props.Title.title),
+      : pageToSlug(richTextToString(props.Nom.title)),
+    title: richTextToString(props.Nom.title),
     summary: richTextToString(props.Summary?.rich_text ?? []),
     client: richTextToString(props.Client?.rich_text ?? []),
     year: props.Year?.number ?? new Date().getFullYear(),
@@ -134,76 +134,86 @@ function notionPageToCaseStudy(page: any): CaseStudy {
 // ─── Public API ────────────────────────────────────────────────────────────
 
 export async function getAllCaseStudies(): Promise<CaseStudy[]> {
-  if (!import.meta.env.NOTION_API_KEY) {
+  if (!import.meta.env.NOTION_API_KEY || !import.meta.env.NOTION_DATABASE_ID) {
     return MOCK_CASE_STUDIES;
   }
 
-  const response = await notion.databases.query({
-    database_id: DATABASE_ID,
-    filter: {
-      property: "Published",
-      checkbox: { equals: true },
-    },
-    sorts: [{ property: "Year", direction: "descending" }],
-  });
+  try {
+    const response = await notion.databases.query({
+      database_id: DATABASE_ID,
+      filter: {
+        property: "Published",
+        checkbox: { equals: true },
+      },
+      sorts: [{ property: "Year", direction: "descending" }],
+    });
 
-  return response.results.map(notionPageToCaseStudy);
+    return response.results.map(notionPageToCaseStudy);
+  } catch (err) {
+    console.warn("[notion] getAllCaseStudies failed, using mock data:", (err as Error).message);
+    return MOCK_CASE_STUDIES;
+  }
 }
 
 export async function getCaseStudyBySlug(
   slug: string
 ): Promise<CaseStudy | undefined> {
-  if (!import.meta.env.NOTION_API_KEY) {
+  if (!import.meta.env.NOTION_API_KEY || !import.meta.env.NOTION_DATABASE_ID) {
     return MOCK_CASE_STUDIES.find((cs) => cs.slug === slug);
   }
 
-  const response = await notion.databases.query({
-    database_id: DATABASE_ID,
-    filter: {
-      property: "Slug",
-      rich_text: { equals: slug },
-    },
-  });
+  try {
+    const response = await notion.databases.query({
+      database_id: DATABASE_ID,
+      filter: {
+        property: "Slug",
+        rich_text: { equals: slug },
+      },
+    });
 
-  if (!response.results.length) return undefined;
+    if (!response.results.length) return undefined;
 
-  const page = response.results[0] as any;
-  const caseStudy = notionPageToCaseStudy(page);
+    const page = response.results[0] as any;
+    const caseStudy = notionPageToCaseStudy(page);
 
-  // Fetch page blocks for rich content
-  const blocks = await notion.blocks.children.list({ block_id: page.id });
-  caseStudy.content = blocks.results
-    .map((block: any): ContentBlock | null => {
-      switch (block.type) {
-        case "paragraph":
-          return {
-            type: "paragraph",
-            text: richTextToString(block.paragraph.rich_text),
-          };
-        case "heading_2":
-          return {
-            type: "heading",
-            text: richTextToString(block.heading_2.rich_text),
-          };
-        case "quote":
-          return {
-            type: "quote",
-            text: richTextToString(block.quote.rich_text),
-          };
-        case "image":
-          return {
-            type: "image",
-            url:
-              block.image.type === "external"
-                ? block.image.external.url
-                : block.image.file.url,
-            alt: richTextToString(block.image.caption),
-          };
-        default:
-          return null;
-      }
-    })
-    .filter(Boolean) as ContentBlock[];
+    // Fetch page blocks for rich content
+    const blocks = await notion.blocks.children.list({ block_id: page.id });
+    caseStudy.content = blocks.results
+      .map((block: any): ContentBlock | null => {
+        switch (block.type) {
+          case "paragraph":
+            return {
+              type: "paragraph",
+              text: richTextToString(block.paragraph.rich_text),
+            };
+          case "heading_2":
+            return {
+              type: "heading",
+              text: richTextToString(block.heading_2.rich_text),
+            };
+          case "quote":
+            return {
+              type: "quote",
+              text: richTextToString(block.quote.rich_text),
+            };
+          case "image":
+            return {
+              type: "image",
+              url:
+                block.image.type === "external"
+                  ? block.image.external.url
+                  : block.image.file.url,
+              alt: richTextToString(block.image.caption),
+            };
+          default:
+            return null;
+        }
+      })
+      .filter(Boolean) as ContentBlock[];
 
-  return caseStudy;
+    return caseStudy;
+  } catch (err) {
+    console.warn("[notion] getCaseStudyBySlug failed, using mock data:", (err as Error).message);
+    return MOCK_CASE_STUDIES.find((cs) => cs.slug === slug);
+  }
 }
