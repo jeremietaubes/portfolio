@@ -82,7 +82,26 @@ function notionPageToCaseStudy(page: any): CaseStudy {
     client: richTextToString(props.Client?.rich_text ?? []),
     year: props.Year?.number ?? new Date().getFullYear(),
     tags: props.Tags?.multi_select?.map((t: any) => t.name) ?? [],
-    coverImage: props.CoverImage?.url ?? "",
+    coverImage: (() => {
+      // Champ Text (rich_text) : nom de fichier local, ex: "finbank-cover.webp"
+      if (props.CoverImage?.rich_text?.length) {
+        const filename = richTextToString(props.CoverImage.rich_text);
+        console.log(`[notion] coverImage (rich_text) → /images/${filename}`);
+        return `/images/${filename}`;
+      }
+      // Champ URL : nom de fichier local ou URL complète
+      if (props.CoverImage?.url) {
+        const val = props.CoverImage.url;
+        if (val.startsWith("http")) {
+          console.log(`[notion] coverImage (url externe) → ${val}`);
+          return val;
+        }
+        console.log(`[notion] coverImage (url → fichier local) → /images/${val}`);
+        return `/images/${val}`;
+      }
+      console.log("[notion] coverImage → vide");
+      return "";
+    })(),
   };
 }
 
@@ -134,11 +153,12 @@ function parseBlocks(blocks: any[]): ContentBlock[] {
         break;
       }
       case "image": {
-        const url =
+        const alt = richTextToString(block.image.caption);
+        const url = alt ? `/images/${alt}` : (
           block.image.type === "external"
             ? block.image.external.url
-            : block.image.file.url;
-        const alt = richTextToString(block.image.caption);
+            : block.image.file.url
+        );
         result.push({ type: "image", url, alt });
         break;
       }
