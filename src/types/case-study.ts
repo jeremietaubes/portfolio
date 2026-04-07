@@ -7,16 +7,13 @@ export interface CaseStudy {
   year: number;
   tags: string[];
   coverImage: string;
-  // Detail page fields
-  challenge?: string;
-  solution?: string;
-  outcome?: string;
   content?: ContentBlock[];
 }
 
-export interface ContentBlock {
-  type: "paragraph" | "heading" | "image" | "quote";
-  text?: string;
-  url?: string;
-  alt?: string;
-}
+export type ContentBlock =
+  | { type: "heading"; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "quote"; text: string }
+  | { type: "image"; url: string; alt: string }
+  | { type: "bullet_list"; items: string[] }
+  | { type: "numbered_list"; items: string[] };

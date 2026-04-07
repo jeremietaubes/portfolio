@@ -17,29 +17,18 @@ const MOCK_CASE_STUDIES: CaseStudy[] = [
     year: 2024,
     tags: ["UX Design", "Mobile", "Finance"],
     coverImage: "https://placehold.co/800x450/1a1a2e/ffffff?text=FinBank",
-    challenge:
-      "Users were abandoning transfers mid-flow due to unclear navigation and excessive steps.",
-    solution:
-      "We conducted 20 user interviews, mapped existing flows, and redesigned the transfer journey from 7 steps to 3.",
-    outcome:
-      "40% reduction in drop-off, CSAT improved from 3.2 to 4.6 in 3 months post-launch.",
     content: [
-      {
-        type: "heading",
-        text: "Research phase",
-      },
-      {
-        type: "paragraph",
-        text: "We started with a heuristic audit identifying 12 usability issues, then validated them through moderated sessions with 20 participants.",
-      },
-      {
-        type: "heading",
-        text: "Design & iteration",
-      },
-      {
-        type: "paragraph",
-        text: "Three prototype rounds were tested before reaching the final version, with a strong focus on accessibility (WCAG AA).",
-      },
+      { type: "heading", text: "Contexte" },
+      { type: "paragraph", text: "FinBank is a neobank serving 2M users in France. Despite strong growth, user satisfaction scores were declining due to a dated mobile experience." },
+      { type: "heading", text: "Problème" },
+      { type: "paragraph", text: "Users were abandoning transfers mid-flow due to unclear navigation and excessive steps. The average transfer took 7 steps and had a 42% drop-off rate." },
+      { type: "heading", text: "Processus" },
+      { type: "paragraph", text: "We started with a heuristic audit identifying 12 usability issues, then validated them through moderated sessions with 20 participants." },
+      { type: "bullet_list", items: ["20 user interviews conducted", "Heuristic audit — 12 issues identified", "3 prototype rounds tested", "Accessibility review (WCAG AA)"] },
+      { type: "heading", text: "Solution" },
+      { type: "paragraph", text: "We redesigned the transfer journey from 7 steps to 3, with clear progress indicators and inline error handling." },
+      { type: "heading", text: "Résultats" },
+      { type: "bullet_list", items: ["40% reduction in drop-off rate", "CSAT improved from 3.2 to 4.6 in 3 months post-launch", "Transfer completion time reduced by 55%"] },
     ],
   },
   {
@@ -52,48 +41,17 @@ const MOCK_CASE_STUDIES: CaseStudy[] = [
     year: 2023,
     tags: ["Design System", "B2B", "Figma"],
     coverImage: "https://placehold.co/800x450/0f3460/ffffff?text=DataFlow",
-    challenge:
-      "Three product teams were working with divergent components, creating inconsistencies across the platform.",
-    solution:
-      "Creation of a centralized design system with 80+ components documented in Figma and Storybook.",
-    outcome:
-      "50% faster handoffs, 30% fewer design QA rounds, and adoption by all product teams within 6 months.",
     content: [
-      {
-        type: "heading",
-        text: "Audit & foundations",
-      },
-      {
-        type: "paragraph",
-        text: "We inventoried all components across the three products — 230 unique elements reduced to 80 reusable components.",
-      },
-    ],
-  },
-  {
-    id: "3",
-    slug: "ecommerce-conversion",
-    title: "Conversion optimization for an e-commerce site",
-    summary:
-      "Data-driven UX improvements increasing the conversion rate from 1.8% to 3.1%.",
-    client: "ModeMaison",
-    year: 2023,
-    tags: ["E-commerce", "CRO", "A/B Testing"],
-    coverImage: "https://placehold.co/800x450/16213e/ffffff?text=ModeMaison",
-    challenge:
-      "A high cart abandonment rate (78%) and low product page conversion despite strong traffic.",
-    solution:
-      "Funnel analysis, 8 A/B tests on product pages and checkout, and redesign of the micro-interaction layer.",
-    outcome:
-      "Conversion rate up from 1.8% to 3.1%, cart abandonment down 22%, revenue +41% over 6 months.",
-    content: [
-      {
-        type: "heading",
-        text: "Data analysis",
-      },
-      {
-        type: "paragraph",
-        text: "Session recordings and heatmaps revealed that 60% of users left the product page without scrolling to the CTA.",
-      },
+      { type: "heading", text: "Contexte" },
+      { type: "paragraph", text: "DataFlow is a B2B analytics platform with three separate product teams working independently, leading to visual inconsistencies across the product." },
+      { type: "heading", text: "Problème" },
+      { type: "paragraph", text: "Three product teams were working with divergent components, creating inconsistencies and slowing down design-to-dev handoffs significantly." },
+      { type: "heading", text: "Processus" },
+      { type: "paragraph", text: "We inventoried all components across the three products — 230 unique elements reduced to 80 reusable components." },
+      { type: "heading", text: "Solution" },
+      { type: "paragraph", text: "Creation of a centralized design system with 80+ components documented in Figma and Storybook, with contribution guidelines for all teams." },
+      { type: "heading", text: "Résultats" },
+      { type: "bullet_list", items: ["50% faster handoffs", "30% fewer design QA rounds", "Adopted by all product teams within 6 months"] },
     ],
   },
 ];
@@ -125,10 +83,69 @@ function notionPageToCaseStudy(page: any): CaseStudy {
     year: props.Year?.number ?? new Date().getFullYear(),
     tags: props.Tags?.multi_select?.map((t: any) => t.name) ?? [],
     coverImage: props.CoverImage?.url ?? "",
-    challenge: richTextToString(props.Challenge?.rich_text ?? []),
-    solution: richTextToString(props.Solution?.rich_text ?? []),
-    outcome: richTextToString(props.Outcome?.rich_text ?? []),
   };
+}
+
+function parseBlocks(blocks: any[]): ContentBlock[] {
+  const result: ContentBlock[] = [];
+
+  for (const block of blocks) {
+    switch (block.type) {
+      case "heading_2": {
+        const text = richTextToString(block.heading_2.rich_text);
+        if (text) result.push({ type: "heading", text });
+        break;
+      }
+      case "heading_3": {
+        const text = richTextToString(block.heading_3.rich_text);
+        if (text) result.push({ type: "heading", text });
+        break;
+      }
+      case "paragraph": {
+        const text = richTextToString(block.paragraph.rich_text);
+        if (text) result.push({ type: "paragraph", text });
+        break;
+      }
+      case "quote": {
+        const text = richTextToString(block.quote.rich_text);
+        if (text) result.push({ type: "quote", text });
+        break;
+      }
+      case "bulleted_list_item": {
+        const text = richTextToString(block.bulleted_list_item.rich_text);
+        if (!text) break;
+        const last = result[result.length - 1];
+        if (last?.type === "bullet_list") {
+          last.items.push(text);
+        } else {
+          result.push({ type: "bullet_list", items: [text] });
+        }
+        break;
+      }
+      case "numbered_list_item": {
+        const text = richTextToString(block.numbered_list_item.rich_text);
+        if (!text) break;
+        const last = result[result.length - 1];
+        if (last?.type === "numbered_list") {
+          last.items.push(text);
+        } else {
+          result.push({ type: "numbered_list", items: [text] });
+        }
+        break;
+      }
+      case "image": {
+        const url =
+          block.image.type === "external"
+            ? block.image.external.url
+            : block.image.file.url;
+        const alt = richTextToString(block.image.caption);
+        result.push({ type: "image", url, alt });
+        break;
+      }
+    }
+  }
+
+  return result;
 }
 
 // ─── Public API ────────────────────────────────────────────────────────────
@@ -176,40 +193,8 @@ export async function getCaseStudyBySlug(
     const page = response.results[0] as any;
     const caseStudy = notionPageToCaseStudy(page);
 
-    // Fetch page blocks for rich content
-    const blocks = await notion.blocks.children.list({ block_id: page.id });
-    caseStudy.content = blocks.results
-      .map((block: any): ContentBlock | null => {
-        switch (block.type) {
-          case "paragraph":
-            return {
-              type: "paragraph",
-              text: richTextToString(block.paragraph.rich_text),
-            };
-          case "heading_2":
-            return {
-              type: "heading",
-              text: richTextToString(block.heading_2.rich_text),
-            };
-          case "quote":
-            return {
-              type: "quote",
-              text: richTextToString(block.quote.rich_text),
-            };
-          case "image":
-            return {
-              type: "image",
-              url:
-                block.image.type === "external"
-                  ? block.image.external.url
-                  : block.image.file.url,
-              alt: richTextToString(block.image.caption),
-            };
-          default:
-            return null;
-        }
-      })
-      .filter(Boolean) as ContentBlock[];
+    const blocksResponse = await notion.blocks.children.list({ block_id: page.id });
+    caseStudy.content = parseBlocks(blocksResponse.results);
 
     return caseStudy;
   } catch (err) {

@@ -77,32 +77,6 @@ if (!caseStudy) {
     )
   }
 
-  <!-- Context blocks -->
-  {
-    (caseStudy.challenge || caseStudy.solution || caseStudy.outcome) && (
-      <section class="max-w-3xl mx-auto px-6 mb-16 grid gap-8 sm:grid-cols-3">
-        {caseStudy.challenge && (
-          <div class="rounded-xl bg-zinc-50 p-6">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">Challenge</h3>
-            <p class="text-sm text-zinc-700 leading-relaxed">{caseStudy.challenge}</p>
-          </div>
-        )}
-        {caseStudy.solution && (
-          <div class="rounded-xl bg-zinc-50 p-6">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">Solution</h3>
-            <p class="text-sm text-zinc-700 leading-relaxed">{caseStudy.solution}</p>
-          </div>
-        )}
-        {caseStudy.outcome && (
-          <div class="rounded-xl bg-zinc-50 p-6">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">Outcome</h3>
-            <p class="text-sm text-zinc-700 leading-relaxed">{caseStudy.outcome}</p>
-          </div>
-        )}
-      </section>
-    )
-  }
-
   <!-- Rich content blocks -->
   {
     caseStudy.content && caseStudy.content.length > 0 && (
@@ -110,7 +84,7 @@ if (!caseStudy) {
         {caseStudy.content.map((block) => {
           if (block.type === "heading") {
             return (
-              <h2 class="text-2xl font-bold text-zinc-900 pt-4">{block.text}</h2>
+              <h2 class="text-2xl font-bold text-zinc-900 pt-6 border-t border-zinc-100 first:border-t-0 first:pt-0">{block.text}</h2>
             );
           }
           if (block.type === "paragraph") {
@@ -123,6 +97,30 @@ if (!caseStudy) {
               <blockquote class="border-l-4 border-zinc-900 pl-5 italic text-zinc-700 text-lg">
                 {block.text}
               </blockquote>
+            );
+          }
+          if (block.type === "bullet_list") {
+            return (
+              <ul class="space-y-2 pl-1">
+                {block.items.map((item) => (
+                  <li class="flex items-start gap-2.5 text-base text-zinc-600 leading-relaxed">
+                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            );
+          }
+          if (block.type === "numbered_list") {
+            return (
+              <ol class="space-y-2 pl-1 list-none">
+                {block.items.map((item, i) => (
+                  <li class="flex items-start gap-2.5 text-base text-zinc-600 leading-relaxed">
+                    <span class="shrink-0 font-semibold text-zinc-400 tabular-nums">{i + 1}.</span>
+                    {item}
+                  </li>
+                ))}
+              </ol>
             );
           }
           if (block.type === "image") {
