@@ -86,20 +86,14 @@ function notionPageToCaseStudy(page: any): CaseStudy {
       // Champ Text (rich_text) : nom de fichier local, ex: "finbank-cover.webp"
       if (props.CoverImage?.rich_text?.length) {
         const filename = richTextToString(props.CoverImage.rich_text);
-        console.log(`[notion] coverImage (rich_text) → /images/${filename}`);
         return `/images/${filename}`;
       }
       // Champ URL : nom de fichier local ou URL complète
       if (props.CoverImage?.url) {
         const val = props.CoverImage.url;
-        if (val.startsWith("http")) {
-          console.log(`[notion] coverImage (url externe) → ${val}`);
-          return val;
-        }
-        console.log(`[notion] coverImage (url → fichier local) → /images/${val}`);
+        if (val.startsWith("http")) return val;
         return `/images/${val}`;
       }
-      console.log("[notion] coverImage → vide");
       return "";
     })(),
   };
