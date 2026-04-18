@@ -17,13 +17,10 @@ const competences = [
 
 <Layout title="About — Jérémie Taubes">
   <Header />
-  <main class="px-10 py-18 min-h-screen">
+  <main class="px-10 pt-12 pb-18 min-h-screen">
     <div class="max-w-prose-body mx-auto">
 
-      <div class="flex items-center gap-4 mb-12">
-        <span class="text-xs uppercase tracking-wide-lg text-ink-muted whitespace-nowrap">About</span>
-        <div class="flex-1 h-px bg-border-warm"></div>
-      </div>
+      <p class="text-xs uppercase tracking-wide-lg text-ink-muted mb-12">About</p>
 
       <div class="space-y-6 mb-16">
         <p class="text-base text-ink-soft leading-relaxed">
@@ -45,10 +42,7 @@ const competences = [
       </div>
 
       <div>
-        <div class="flex items-center gap-4 mb-8">
-          <span class="text-xs uppercase tracking-wide-lg text-ink-muted whitespace-nowrap">Compétences</span>
-          <div class="flex-1 h-px bg-border-warm"></div>
-        </div>
+        <p class="text-xs uppercase tracking-wide-lg text-ink-muted mb-8">Compétences</p>
 
         <div class="flex flex-wrap gap-2">
           {competences.map((c) => (

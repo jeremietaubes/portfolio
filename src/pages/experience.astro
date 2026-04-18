@@ -25,25 +25,22 @@ const experiences = [
 ];
 ---
 
-<Layout title="Expérience — Jérémie Taubes">
+<Layout title="Expériences — Jérémie Taubes">
   <Header />
-  <main class="px-10 py-18 min-h-screen">
+  <main class="px-10 pt-12 pb-18 min-h-screen">
     <div class="max-w-hero-inner mx-auto">
 
-      <div class="flex items-center gap-4 mb-12">
-        <span class="text-xs uppercase tracking-wide-lg text-ink-muted whitespace-nowrap">Expérience</span>
-        <div class="flex-1 h-px bg-border-warm"></div>
-      </div>
+      <p class="text-xs uppercase tracking-wide-lg text-ink-muted mb-12">Expériences</p>
 
       <div class="space-y-0">
         {experiences.map((xp, i) => (
-          <div class={`py-10 ${i < experiences.length - 1 ? 'border-b border-border-light' : ''}`}>
+          <div class="py-10">
             <div class="flex flex-col md:flex-row md:items-start gap-2 md:gap-12 mb-4">
               <div class="md:w-48 shrink-0">
                 <p class="text-xs text-ink-muted">{xp.dates}</p>
               </div>
               <div>
-                <h2 class="text-section-h font-medium text-ink mb-1">{xp.role}</h2>
+                <h2 class="font-display text-section-h text-ink mb-1">{xp.role}</h2>
                 <p class="text-sm font-medium text-ink-muted mb-4">{xp.company}</p>
                 <p class="text-base text-ink-soft leading-relaxed">{xp.description}</p>
               </div>

@@ -7,6 +7,8 @@ export interface CaseStudy {
   year: number;
   tags: string[];
   coverImage: string;
+  location: string;
+  order: number;
   content?: ContentBlock[];
 }
 
@@ -17,4 +19,5 @@ export type ContentBlock =
   | { type: "quote"; text: string }
   | { type: "image"; url: string; alt: string }
   | { type: "bullet_list"; items: string[] }
-  | { type: "numbered_list"; items: string[] };
+  | { type: "numbered_list"; items: string[] }
+  | { type: "callout"; text: string; emoji?: string };

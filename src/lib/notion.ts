@@ -96,6 +96,8 @@ function notionPageToCaseStudy(page: any): CaseStudy {
       }
       return "";
     })(),
+    location: richTextToString(props.Location?.rich_text ?? []),
+    order: props.Order?.number ?? 999,
   };
 }
 
@@ -146,6 +148,18 @@ function parseBlocks(blocks: any[]): ContentBlock[] {
         }
         break;
       }
+      case "callout": {
+        const text = richTextToString(block.callout.rich_text);
+        if (!text) break;
+        const emoji = block.callout.icon?.type === "emoji" ? block.callout.icon.emoji : undefined;
+        result.push({ type: "callout", text, emoji });
+        break;
+      }
+      case "equation": {
+        const text = block.equation?.expression;
+        if (text) result.push({ type: "callout", text });
+        break;
+      }
       case "image": {
         const alt = richTextToString(block.image.caption);
         const url = alt ? `/images/${alt}` : (
@@ -162,12 +176,19 @@ function parseBlocks(blocks: any[]): ContentBlock[] {
   return result;
 }
 
+// ─── Cache ─────────────────────────────────────────────────────────────────
+
+let cacheAll: { data: CaseStudy[]; ts: number } | null = null;
+const CACHE_TTL = 60_000; // 60s
+
 // ─── Public API ────────────────────────────────────────────────────────────
 
 export async function getAllCaseStudies(): Promise<CaseStudy[]> {
   if (!import.meta.env.NOTION_API_KEY || !import.meta.env.NOTION_DATABASE_ID) {
     return MOCK_CASE_STUDIES;
   }
+
+  if (cacheAll && Date.now() - cacheAll.ts < CACHE_TTL) return cacheAll.data;
 
   try {
     const response = await notion.databases.query({
@@ -176,10 +197,13 @@ export async function getAllCaseStudies(): Promise<CaseStudy[]> {
         property: "Published",
         checkbox: { equals: true },
       },
-      sorts: [{ property: "Year", direction: "descending" }],
     });
 
-    return response.results.map(notionPageToCaseStudy);
+    const data = response.results
+      .map(notionPageToCaseStudy)
+      .sort((a, b) => a.order - b.order);
+    cacheAll = { data, ts: Date.now() };
+    return data;
   } catch (err) {
     console.warn("[notion] getAllCaseStudies failed, using mock data:", (err as Error).message);
     return MOCK_CASE_STUDIES;

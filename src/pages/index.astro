@@ -13,31 +13,28 @@ const caseStudies = await getAllCaseStudies();
   <Header />
   <Hero />
 
-  <section id="work" class="px-10 py-18">
+  <section id="work" class="px-10 pt-18 pb-24" style="scroll-margin-top: 60px;">
     <div class="max-w-card-list mx-auto">
 
       <!-- Section label -->
-      <div class="flex items-center gap-4 mb-10">
-        <span class="text-xs uppercase tracking-wide-lg text-ink-muted whitespace-nowrap">
-          Selected work
-        </span>
-        <div class="flex-1 h-px bg-border-warm"></div>
-      </div>
+      <p class="text-xs uppercase tracking-wide-lg text-ink-muted mb-10">Selected work</p>
 
       <!-- Cards container -->
       {caseStudies.length === 0 ? (
         <p class="text-sm text-ink-muted">Aucun projet publié pour le moment.</p>
       ) : (
-        <div class="bg-card-bg border border-border-warm rounded-2xl overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           {caseStudies.map((cs, i) => (
             <CaseStudyCard
               title={cs.title}
               description={cs.summary}
-              category={cs.tags[0] ?? ''}
+              tags={cs.tags}
+              client={cs.client}
               year={cs.year}
               coverImage={cs.coverImage}
               slug={cs.slug}
               index={i}
+              location={cs.location}
             />
           ))}
         </div>

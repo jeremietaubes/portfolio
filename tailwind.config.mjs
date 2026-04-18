@@ -5,8 +5,8 @@ export default {
     extend: {
       colors: {
         'cream':        '#FAFAF7',
-        'ink':          '#1A1A16',
-        'ink-soft':     '#5A5A4E',
+        'ink':          '#141413',
+        'ink-soft':     '#3D3D3A',
         'ink-muted':    '#8A8878',
         'ink-faint':    '#C0BFBA',
         'border-warm':  '#E0DED6',
@@ -17,6 +17,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        display: ['Bricolage Grotesque', 'sans-serif'],
       },
       letterSpacing: {
         'tight-xl': '-0.03em',
@@ -26,21 +27,21 @@ export default {
         'wide-lg':  '0.09em',
       },
       fontSize: {
-        'display':    ['44px', { lineHeight: '1.08' }],
-        'display-sm': ['28px', { lineHeight: '1.08' }],
-        'section-h':  ['22px', { lineHeight: '1.4'  }],
+        'display':    ['44px', { lineHeight: '1.08', fontWeight: '700' }],
+        'display-sm': ['28px', { lineHeight: '1.08', fontWeight: '700' }],
+        'section-h':  ['22px', { lineHeight: '1.4',  fontWeight: '700' }],
       },
       maxWidth: {
-        'card-list':  '900px',
+        'card-list':  '1200px',
         'prose-body': '680px',
-        'hero-inner': '720px',
-        'article':    '748px',
+        'hero-inner': '970px',
+        'article':    '880px',
       },
       spacing: {
         '4.5': '1.125rem',
       },
       minHeight: {
-        'hero': '67vh',
+        'hero': '60vh',
       },
     }
   },

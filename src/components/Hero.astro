@@ -1,44 +1,45 @@
 ---
 ---
 
-<section class="min-h-hero bg-cream border-b border-border-warm flex items-center justify-center px-10 py-16">
-  <div class="flex items-start gap-12 w-full max-w-hero-inner">
+<section class="min-h-hero bg-cream flex flex-col items-center justify-center px-10 py-10 gap-10">
+  <div class="flex items-center gap-12 w-full max-w-hero-inner">
 
     <div class="shrink-0">
       <img
-        src="/images/photo.jpg"
+        src="/images/photo.webp"
         alt="Jérémie Taubes"
-        class="hero-photo rounded-xl object-cover bg-border-warm"
+        class="hero-photo rounded-full object-cover bg-border-warm"
         onerror="this.style.display='none';document.getElementById('photo-fallback').style.display='block';"
       />
       <div id="photo-fallback" class="hero-photo rounded-xl bg-border-warm hidden"></div>
     </div>
 
     <div>
-      <p class="text-xs uppercase tracking-wide-lg text-ink-muted mb-4.5">
-        Product Designer · Paris
+      <p class="text-xs uppercase tracking-wide-lg text-ink-muted mb-4.5 font-medium">
+        Lead Product Designer · Paris
       </p>
-      <h1 class="font-medium tracking-tight-xl text-ink mb-4.5 text-display-sm md:text-display">
-        Je conçois des produits<br />numériques qui ont<br />du sens.
+      <h1 class="font-display tracking-tight-xl text-ink mb-4.5 text-display-sm md:text-display">
+        J'accompagne les entreprises et les designers dans la création de produits à fort impact.
       </h1>
-      <p class="text-base text-ink-soft leading-relaxed max-w-sm mb-8">
-        Designer produit avec 5 ans d'expérience en UX, stratégie et recherche utilisateur — de la startup à l'entreprise CAC 40.
+      <p class="text-base text-ink-soft leading-relaxed">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
       </p>
-      <button
-        id="hero-cta"
-        class="bg-ink text-cream text-xs uppercase tracking-wide-xs px-6 py-3 rounded-md hover:opacity-85 transition-opacity duration-150"
-      >
-        Voir mes projets
-      </button>
     </div>
 
   </div>
+
+  <button
+    id="hero-cta"
+    class="bg-ink text-cream text-xs uppercase tracking-wide-xs font-medium px-6 py-3 rounded-full hover:opacity-85 transition-opacity duration-150"
+  >
+    Voir mes projets ↓
+  </button>
 </section>
 
 <style>
   .hero-photo {
-    width: 120px;
-    height: 150px;
+    width: 222px;
+    height: 222px;
   }
 </style>
 

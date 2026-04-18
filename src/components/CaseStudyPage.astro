@@ -15,128 +15,166 @@ const { caseStudy, content, prev, next } = Astro.props;
 <div class="max-w-article mx-auto px-6 pt-10">
   <a
     href="/"
-    class="inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors duration-150"
+    class="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wide-xs bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150"
   >
     ← Retour
   </a>
 </div>
 
+<!-- Title + summary + tags -->
+<header class="max-w-article mx-auto px-6 pt-8 pb-8">
+  {caseStudy.tags.length > 0 && (
+    <div class="flex flex-wrap gap-2 mb-5">
+      {caseStudy.tags.map((tag) => (
+        <span class="inline-block px-2.5 py-0.5 rounded-full bg-border-light text-ink-soft text-sm font-medium">{tag}</span>
+      ))}
+    </div>
+  )}
+  <h1 class="font-display text-display-sm md:text-display tracking-tight-xl text-ink mb-4">
+    {caseStudy.title}
+  </h1>
+  {caseStudy.summary && (
+    <p class="text-lg text-ink-soft leading-relaxed mb-4">{caseStudy.summary}</p>
+  )}
+  <div class="border-t border-border-warm mt-6 pt-6 flex justify-between">
+    {caseStudy.client && (
+      <div>
+        <p class="text-xs text-ink-muted mb-1">Client</p>
+        <p class="text-sm text-ink">{caseStudy.client}</p>
+      </div>
+    )}
+    <div>
+      <p class="text-xs text-ink-muted mb-1">Année</p>
+      <p class="text-sm text-ink">{caseStudy.year}</p>
+    </div>
+    {caseStudy.location && (
+      <div>
+        <p class="text-xs text-ink-muted mb-1">Lieu</p>
+        <p class="text-sm text-ink">{caseStudy.location}</p>
+      </div>
+    )}
+  </div>
+</header>
+
 <!-- Cover image -->
 {caseStudy.coverImage ? (
-  <div class="mt-8 mb-0 px-6 max-w-5xl mx-auto">
+  <div class="mt-6 mb-6 px-6 max-w-5xl mx-auto">
     <img
       src={caseStudy.coverImage}
       alt={caseStudy.title}
       class="w-full object-cover rounded-2xl bg-border-light"
-      style="max-height:480px;"
+      style="max-height:780px;"
     />
   </div>
 ) : (
-  <div class="mt-8 mb-0 px-6 max-w-5xl mx-auto">
+  <div class="mt-6 mb-6 px-6 max-w-5xl mx-auto">
     <div class="w-full rounded-2xl bg-border-light" style="height:320px;"></div>
   </div>
 )}
 
-<!-- Metadata -->
-<div class="max-w-article mx-auto px-6 mt-6 mb-2">
-  <p class="text-sm text-ink-muted">
-    {[caseStudy.tags[0], String(caseStudy.year), caseStudy.client].filter(Boolean).join(' · ')}
-  </p>
-</div>
-
-<!-- Title + summary -->
-<header class="max-w-article mx-auto px-6 pt-6 pb-10 border-b border-border-light">
-  <h1 class="text-display-sm md:text-display font-medium tracking-tight-xl text-ink mb-4">
-    {caseStudy.title}
-  </h1>
-  {caseStudy.summary && (
-    <p class="text-lg text-ink-soft leading-relaxed">{caseStudy.summary}</p>
-  )}
-</header>
-
 <!-- Rich content -->
 {content.length > 0 && (
-  <article class="max-w-prose-body mx-auto px-6 pt-12 pb-24 space-y-6" style="line-height:1.75;">
+  <div class="pt-6 pb-24" style="line-height:1.75;">
     {content.map((block) => {
+      if (block.type === 'image') {
+        return (
+          <div class="px-6 max-w-5xl mx-auto mb-14 mt-14">
+            <img
+              src={block.url}
+              alt=""
+              class="w-full object-cover rounded-2xl bg-border-light ring-1 ring-border-light"
+              style="max-height:480px;"
+              loading="lazy"
+            />
+          </div>
+        );
+      }
       if (block.type === 'heading') {
         return (
-          <h2 class="text-section-h font-medium text-ink mt-12 mb-0">{block.text}</h2>
+          <div class="max-w-prose-body mx-auto px-6 mb-6">
+            <h2 class="font-display text-section-h text-ink mt-6 mb-0 tracking-normal">{block.text}</h2>
+          </div>
         );
       }
       if (block.type === 'subtitle') {
         return (
-          <p class="text-xs font-medium uppercase tracking-wide-sm text-ink-muted -mb-3">{block.text}</p>
+          <div class="max-w-prose-body mx-auto px-6 mt-10 -mb-1">
+            <p class="pl-4 border-l border-border-warm text-sm font-sans text-ink-muted font-normal py-2">{block.text}</p>
+          </div>
         );
       }
       if (block.type === 'paragraph') {
         return (
-          <p class="text-base text-ink-soft" set:html={block.text} />
+          <div class="max-w-prose-body mx-auto px-6 mb-6">
+            <p class="text-base text-ink-soft" set:html={block.text} />
+          </div>
         );
       }
       if (block.type === 'quote') {
         return (
-          <blockquote class="border-l-2 border-ink pl-5 italic text-ink-soft text-lg">
-            {block.text}
-          </blockquote>
+          <div class="max-w-prose-body mx-auto px-6 mb-6">
+            <blockquote class="border-l-2 border-ink pl-5 italic text-ink-soft text-lg">
+              {block.text}
+            </blockquote>
+          </div>
         );
       }
       if (block.type === 'bullet_list') {
         return (
-          <ul class="space-y-2 pl-1">
-            {block.items.map((item) => (
-              <li class="flex items-start gap-3 text-base text-ink-soft">
-                <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
-                <span set:html={item} />
-              </li>
-            ))}
-          </ul>
+          <div class="max-w-prose-body mx-auto px-6 mb-6">
+            <ul class="space-y-2 pl-1">
+              {block.items.map((item) => (
+                <li class="flex items-start gap-3 text-base text-ink-soft">
+                  <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
+                  <span set:html={item} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+      if (block.type === 'callout') {
+        return (
+          <div class="max-w-prose-body mx-auto px-6 mb-6">
+            <div class="bg-white ring-1 ring-border-warm rounded-2xl px-8 py-6 flex gap-4 items-start">
+              {block.emoji && (
+                <span class="text-2xl shrink-0 mt-0.5">{block.emoji}</span>
+              )}
+              <p class="text-base text-ink-soft leading-relaxed" set:html={block.text} />
+            </div>
+          </div>
         );
       }
       if (block.type === 'numbered_list') {
         return (
-          <ol class="space-y-2 pl-1 list-none">
-            {block.items.map((item, i) => (
-              <li class="flex items-start gap-3 text-base text-ink-soft">
-                <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
-                <span set:html={item} />
-              </li>
-            ))}
-          </ol>
-        );
-      }
-      if (block.type === 'image') {
-        return (
-          <figure>
-            <img
-              src={block.url}
-              alt={block.alt ?? ''}
-              class="w-full rounded-xl bg-border-light"
-              loading="lazy"
-            />
-            {block.alt && (
-              <figcaption class="mt-2 text-center text-xs text-ink-muted">
-                {block.alt}
-              </figcaption>
-            )}
-          </figure>
+          <div class="max-w-prose-body mx-auto px-6 mb-6">
+            <ol class="space-y-2 pl-1 list-none">
+              {block.items.map((item, i) => (
+                <li class="flex items-start gap-3 text-base text-ink-soft">
+                  <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
+                  <span set:html={item} />
+                </li>
+              ))}
+            </ol>
+          </div>
         );
       }
     })}
-  </article>
+  </div>
 )}
 
 <!-- Bottom navigation -->
 {(prev || next) && (
-  <div class="max-w-article mx-auto px-6 mb-16 pt-8 border-t border-border-light flex justify-between">
+  <div class="max-w-card-list mx-auto px-6 mb-16 pt-8 border-t border-border-warm flex justify-between gap-4">
     {prev ? (
-      <a href={`/case/${prev.slug}`} class="text-sm text-ink-muted hover:text-ink transition-colors duration-150">
-        ← {prev.title}
+      <a href={`/case/${prev.slug}`} title={prev.title} class="flex-1 md:flex-none inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wide-xs bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150">
+        ← <span class="line-clamp-2 md:line-clamp-1 max-w-[42ch]">{prev.title}</span>
       </a>
-    ) : <span />}
+    ) : <span class="flex-1 md:flex-none" />}
     {next ? (
-      <a href={`/case/${next.slug}`} class="text-sm text-ink-muted hover:text-ink transition-colors duration-150">
-        {next.title} →
+      <a href={`/case/${next.slug}`} title={next.title} class="flex-1 md:flex-none inline-flex items-center justify-end gap-2 text-xs font-medium uppercase tracking-wide-xs bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150">
+        <span class="line-clamp-2 md:line-clamp-1 max-w-[42ch]">{next.title}</span> →
       </a>
-    ) : <span />}
+    ) : <span class="flex-1 md:flex-none" />}
   </div>
 )}

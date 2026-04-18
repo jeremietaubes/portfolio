@@ -68,6 +68,11 @@ function parseBlocks(blocks: any[]): ContentBlock[] {
         }
         break;
       }
+      case "equation": {
+        const text = block.equation?.expression;
+        if (text) result.push({ type: "callout", text });
+        break;
+      }
       case "image": {
         const alt = richTextToString(block.image.caption);
         const url = alt

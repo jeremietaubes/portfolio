@@ -3,14 +3,14 @@
 
 <header class="sticky top-0 z-50 bg-cream border-b border-border-warm">
   <div class="flex items-center justify-between px-10 py-4.5">
-    <a href="/" class="text-sm font-medium text-ink">Jérémie Taubes</a>
+    <a href="/" class="nav-link font-medium text-ink" style="font-size:14px;">Jérémie Taubes - Portfolio</a>
 
-    <nav class="hidden md:flex items-center gap-8">
-      <a href="/#work" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Work</a>
-      <a href="/experience" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Expérience</a>
-      <a href="/formations" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Formations</a>
-      <a href="/about" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">About</a>
-      <a href="#contact" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Contact</a>
+    <nav class="hidden md:flex items-center gap-1">
+      <a href="/#work" class="nav-link">Work</a>
+      <a href="/experience" class="nav-link">Expériences</a>
+      <a href="/formations" class="nav-link">Formation</a>
+      <a href="/about" class="nav-link">About</a>
+      <a href="#contact" class="nav-link">Contact</a>
     </nav>
 
     <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Ouvrir le menu">
@@ -22,14 +22,32 @@
 
   <div id="mobile-menu" class="hidden md:hidden border-t border-border-warm bg-cream">
     <nav class="flex flex-col px-10 py-6 gap-5">
-      <a href="/#work" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Work</a>
-      <a href="/experience" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Expérience</a>
-      <a href="/formations" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Formations</a>
-      <a href="/about" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">About</a>
-      <a href="#contact" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Contact</a>
+      <a href="/#work" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150">Work</a>
+      <a href="/experience" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150">Expériences</a>
+      <a href="/formations" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150">Formation</a>
+      <a href="/about" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150">About</a>
+      <a href="#contact" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150">Contact</a>
     </nav>
   </div>
 </header>
+
+<style>
+  .nav-link {
+    font-size: 13px;
+    color: #6B6B6B;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .nav-link:hover,
+  .nav-link.active {
+    background: #F0EFED;
+    border-color: #E2E0DC;
+    color: #1A1A16;
+  }
+</style>
 
 <script>
   const toggle = document.getElementById('menu-toggle');
@@ -53,5 +71,22 @@
         bar3.style.transform = '';
       }
     }
+  });
+
+  const links = document.querySelectorAll('nav a');
+  links.forEach(link => {
+    if (link.getAttribute('href') === window.location.pathname) {
+      link.classList.add('active');
+    }
+  });
+
+  document.querySelectorAll('nav a[href="/#work"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const work = document.getElementById('work');
+      if (work) {
+        e.preventDefault();
+        work.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
   });
 </script>

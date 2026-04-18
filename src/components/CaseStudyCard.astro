@@ -2,100 +2,70 @@
 interface Props {
   title: string;
   description: string;
-  category: string;
+  tags: string[];
+  client?: string;
   year: number;
   coverImage: string;
   slug: string;
   index: number;
+  location?: string;
 }
 
-const { title, description, category, year, coverImage, slug, index } = Astro.props;
-
-const indexLabel = String(index + 1).padStart(2, '0');
+const { title, description, tags, client, year, coverImage, slug, location } = Astro.props;
 ---
 
 <a
   href={`/case/${slug}`}
-  class="card-link group flex border-b border-border-light last:border-b-0 hover:bg-hover-warm transition-colors duration-150"
+  class="card-link group block rounded-2xl overflow-hidden border border-border-warm bg-card-bg transition-all duration-300"
 >
-  <!-- Left column -->
-  <div class="left-col shrink-0 border-r border-border-light flex flex-col justify-between">
-    <div>
-      <div class="text-xs font-medium text-ink-faint mb-3">{indexLabel}</div>
-      {category && (
-        <span class="inline-block text-xs uppercase tracking-wide-sm text-ink-muted border border-border-warm rounded-full px-2 py-0.5">
-          {category}
-        </span>
-      )}
-    </div>
-    <div class="text-xs text-ink-faint">{year}</div>
-  </div>
-
-  <!-- Right column -->
-  <div class="flex-1 flex items-center gap-6 p-7">
-    <div class="flex-1 min-w-0">
-      <h2 class="text-lg font-medium tracking-tight-lg text-ink mb-1.5">{title}</h2>
-      <p class="text-sm text-ink-muted leading-relaxed max-w-sm">{description}</p>
-    </div>
-
+  <!-- Cover image -->
+  <div class="aspect-video overflow-hidden bg-border-light">
     {coverImage ? (
       <img
         src={coverImage}
         alt={title}
-        class="thumb rounded-lg object-cover shrink-0 bg-border-light"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         loading="lazy"
       />
     ) : (
-      <div class="thumb rounded-lg bg-border-light border border-border-warm shrink-0"></div>
+      <div class="w-full h-full bg-border-light"></div>
+    )}
+  </div>
+
+  <!-- Content -->
+  <div class="p-7">
+    <!-- Tags -->
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-2 mb-3">
+        {tags.map((tag) => (
+          <span class="inline-block px-2.5 py-0.5 rounded-full bg-border-light text-ink-soft text-xs font-medium">{tag}</span>
+        ))}
+      </div>
     )}
 
-    <span class="arrow text-base text-ink-faint shrink-0">↗</span>
+    <!-- Client · Location · Year -->
+    <p class="text-xs text-ink-muted mb-4">
+      {[client, location, String(year)].filter(Boolean).join(' · ')}
+    </p>
+
+    <!-- Title -->
+    <h2 class="font-display text-section-h text-ink mb-2 tracking-tight-xl">{title}</h2>
+
+    <!-- Summary -->
+    <p class="text-sm text-ink-muted leading-relaxed line-clamp-2">{description}</p>
+
+    <!-- CTA -->
+    <div class="mt-5 flex items-center justify-end gap-1.5 text-sm font-medium text-ink group-hover:gap-3 transition-all duration-150">
+      Voir le projet <span class="text-base">→</span>
+    </div>
   </div>
 </a>
 
 <style>
-  .left-col {
-    width: 160px;
-    padding: 28px 24px;
+  .card-link {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-  .thumb {
-    width: 120px;
-    height: 84px;
-  }
-  .arrow {
-    transition: transform 0.15s ease, color 0.15s ease;
-  }
-  .card-link:hover .arrow {
-    transform: translate(3px, -3px);
-    color: #1A1A16;
-  }
-
-  .fade-card {
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-  .fade-card.visible {
-    opacity: 1;
-    transform: translateY(0);
+  .card-link:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
 </style>
-
-<script>
-  const cards = document.querySelectorAll('.card-link');
-  cards.forEach((card) => card.classList.add('fade-card'));
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
-
-  cards.forEach((card) => observer.observe(card));
-</script>
