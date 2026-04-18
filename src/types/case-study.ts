@@ -12,6 +12,7 @@ export interface CaseStudy {
 
 export type ContentBlock =
   | { type: "heading"; text: string }
+  | { type: "subtitle"; text: string }
   | { type: "paragraph"; text: string }
   | { type: "quote"; text: string }
   | { type: "image"; url: string; alt: string }

@@ -9,7 +9,7 @@ const { caseStudy } = Astro.props;
 ---
 
 <a
-  href={`/case-studies/${caseStudy.slug}`}
+  href={`/case-studies/${caseStudy.id}`}
   class="group block rounded-2xl overflow-hidden border border-zinc-100 hover:border-zinc-200 hover:shadow-lg transition-all duration-300"
 >
   <div class="aspect-video overflow-hidden bg-zinc-50">
@@ -22,6 +22,13 @@ const { caseStudy } = Astro.props;
   </div>
 
   <div class="p-6">
+    <div class="flex items-center justify-between mb-3">
+      {caseStudy.client && (
+        <span class="text-xs text-zinc-400">{caseStudy.client}</span>
+      )}
+      <span class="text-xs text-zinc-400 ml-auto">{caseStudy.year}</span>
+    </div>
+
     <div class="flex items-center gap-2 mb-3 flex-wrap">
       {
         caseStudy.tags.map((tag) => (
@@ -30,14 +37,13 @@ const { caseStudy } = Astro.props;
           </span>
         ))
       }
-      <span class="text-xs text-zinc-400 ml-auto">{caseStudy.year}</span>
     </div>
 
     <h2 class="text-lg font-semibold text-zinc-900 mb-2 group-hover:text-zinc-600 transition-colors">
       {caseStudy.title}
     </h2>
 
-    <p class="text-sm text-zinc-500 leading-relaxed line-clamp-2">
+    <p class="text-sm text-zinc-500 leading-normal line-clamp-2">
       {caseStudy.summary}
     </p>
 
