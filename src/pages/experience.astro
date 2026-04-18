@@ -1,0 +1,58 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+
+const experiences = [
+  {
+    role: "Product Designer",
+    company: "Payfit",
+    dates: "2023 — Aujourd'hui",
+    description: "Conception de l'expérience paie pour +10 000 PME. Recherche utilisateur, design system, et collaboration produit/engineering.",
+  },
+  {
+    role: "UX Designer",
+    company: "Spendesk",
+    dates: "2021 — 2023",
+    description: "Redesign du flux d'approbation des dépenses. Réduction du temps de traitement moyen de 4 min à 45 secondes.",
+  },
+  {
+    role: "Product Designer",
+    company: "Agence Numérique",
+    dates: "2019 — 2021",
+    description: "Projets pour clients grands comptes (LVMH, L'Oréal, Michelin). Prototypage, tests utilisateurs, handoff développement.",
+  },
+];
+---
+
+<Layout title="Expérience — Jérémie Taubes">
+  <Header />
+  <main class="px-10 py-18 min-h-screen">
+    <div class="max-w-hero-inner mx-auto">
+
+      <div class="flex items-center gap-4 mb-12">
+        <span class="text-xs uppercase tracking-wide-lg text-ink-muted whitespace-nowrap">Expérience</span>
+        <div class="flex-1 h-px bg-border-warm"></div>
+      </div>
+
+      <div class="space-y-0">
+        {experiences.map((xp, i) => (
+          <div class={`py-10 ${i < experiences.length - 1 ? 'border-b border-border-light' : ''}`}>
+            <div class="flex flex-col md:flex-row md:items-start gap-2 md:gap-12 mb-4">
+              <div class="md:w-48 shrink-0">
+                <p class="text-xs text-ink-muted">{xp.dates}</p>
+              </div>
+              <div>
+                <h2 class="text-section-h font-medium text-ink mb-1">{xp.role}</h2>
+                <p class="text-sm font-medium text-ink-muted mb-4">{xp.company}</p>
+                <p class="text-base text-ink-soft leading-relaxed">{xp.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </main>
+  <Footer />
+</Layout>

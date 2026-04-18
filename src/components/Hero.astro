@@ -1,0 +1,49 @@
+---
+---
+
+<section class="min-h-hero bg-cream border-b border-border-warm flex items-center justify-center px-10 py-16">
+  <div class="flex items-start gap-12 w-full max-w-hero-inner">
+
+    <div class="shrink-0">
+      <img
+        src="/images/photo.jpg"
+        alt="Jérémie Taubes"
+        class="hero-photo rounded-xl object-cover bg-border-warm"
+        onerror="this.style.display='none';document.getElementById('photo-fallback').style.display='block';"
+      />
+      <div id="photo-fallback" class="hero-photo rounded-xl bg-border-warm hidden"></div>
+    </div>
+
+    <div>
+      <p class="text-xs uppercase tracking-wide-lg text-ink-muted mb-4.5">
+        Product Designer · Paris
+      </p>
+      <h1 class="font-medium tracking-tight-xl text-ink mb-4.5 text-display-sm md:text-display">
+        Je conçois des produits<br />numériques qui ont<br />du sens.
+      </h1>
+      <p class="text-base text-ink-soft leading-relaxed max-w-sm mb-8">
+        Designer produit avec 5 ans d'expérience en UX, stratégie et recherche utilisateur — de la startup à l'entreprise CAC 40.
+      </p>
+      <button
+        id="hero-cta"
+        class="bg-ink text-cream text-xs uppercase tracking-wide-xs px-6 py-3 rounded-md hover:opacity-85 transition-opacity duration-150"
+      >
+        Voir mes projets
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .hero-photo {
+    width: 120px;
+    height: 150px;
+  }
+</style>
+
+<script>
+  document.getElementById('hero-cta')?.addEventListener('click', () => {
+    document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' });
+  });
+</script>

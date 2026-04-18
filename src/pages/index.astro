@@ -1,34 +1,49 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Hero from "@/components/Hero.astro";
+import Footer from "@/components/Footer.astro";
 import CaseStudyCard from "@/components/CaseStudyCard.astro";
 import { getAllCaseStudies } from "@/lib/notion";
 
 const caseStudies = await getAllCaseStudies();
 ---
 
-<Layout title="Portfolio — Case Studies">
-  <section class="max-w-5xl mx-auto px-6 pt-20 pb-12">
-    <div class="max-w-[556px]">
-      <h1 class="text-4xl font-bold tracking-tight text-zinc-900 mb-4">
-        Selected work
-      </h1>
-      <p class="text-lg text-zinc-500 leading-normal">
-        UX & product design case studies — strategy, research, and execution across mobile, SaaS, and e-commerce.
-      </p>
+<Layout title="Jérémie Taubes — Portfolio">
+  <Header />
+  <Hero />
+
+  <section id="work" class="px-10 py-18">
+    <div class="max-w-card-list mx-auto">
+
+      <!-- Section label -->
+      <div class="flex items-center gap-4 mb-10">
+        <span class="text-xs uppercase tracking-wide-lg text-ink-muted whitespace-nowrap">
+          Selected work
+        </span>
+        <div class="flex-1 h-px bg-border-warm"></div>
+      </div>
+
+      <!-- Cards container -->
+      {caseStudies.length === 0 ? (
+        <p class="text-sm text-ink-muted">Aucun projet publié pour le moment.</p>
+      ) : (
+        <div class="bg-card-bg border border-border-warm rounded-2xl overflow-hidden">
+          {caseStudies.map((cs, i) => (
+            <CaseStudyCard
+              title={cs.title}
+              description={cs.summary}
+              category={cs.tags[0] ?? ''}
+              year={cs.year}
+              coverImage={cs.coverImage}
+              slug={cs.slug}
+              index={i}
+            />
+          ))}
+        </div>
+      )}
     </div>
   </section>
 
-  <section class="max-w-5xl mx-auto px-6 pb-24">
-    {
-      caseStudies.length === 0 ? (
-        <p class="text-zinc-400 text-sm">No case studies published yet.</p>
-      ) : (
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {caseStudies.map((cs) => (
-            <CaseStudyCard caseStudy={cs} />
-          ))}
-        </div>
-      )
-    }
-  </section>
+  <Footer />
 </Layout>

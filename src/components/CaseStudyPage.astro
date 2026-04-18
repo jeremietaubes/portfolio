@@ -1,0 +1,142 @@
+---
+import type { CaseStudy, ContentBlock } from "@/types/case-study";
+
+interface Props {
+  caseStudy: CaseStudy;
+  content: ContentBlock[];
+  prev?: CaseStudy;
+  next?: CaseStudy;
+}
+
+const { caseStudy, content, prev, next } = Astro.props;
+---
+
+<!-- Back link -->
+<div class="max-w-article mx-auto px-6 pt-10">
+  <a
+    href="/"
+    class="inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors duration-150"
+  >
+    ← Retour
+  </a>
+</div>
+
+<!-- Cover image -->
+{caseStudy.coverImage ? (
+  <div class="mt-8 mb-0 px-6 max-w-5xl mx-auto">
+    <img
+      src={caseStudy.coverImage}
+      alt={caseStudy.title}
+      class="w-full object-cover rounded-2xl bg-border-light"
+      style="max-height:480px;"
+    />
+  </div>
+) : (
+  <div class="mt-8 mb-0 px-6 max-w-5xl mx-auto">
+    <div class="w-full rounded-2xl bg-border-light" style="height:320px;"></div>
+  </div>
+)}
+
+<!-- Metadata -->
+<div class="max-w-article mx-auto px-6 mt-6 mb-2">
+  <p class="text-sm text-ink-muted">
+    {[caseStudy.tags[0], String(caseStudy.year), caseStudy.client].filter(Boolean).join(' · ')}
+  </p>
+</div>
+
+<!-- Title + summary -->
+<header class="max-w-article mx-auto px-6 pt-6 pb-10 border-b border-border-light">
+  <h1 class="text-display-sm md:text-display font-medium tracking-tight-xl text-ink mb-4">
+    {caseStudy.title}
+  </h1>
+  {caseStudy.summary && (
+    <p class="text-lg text-ink-soft leading-relaxed">{caseStudy.summary}</p>
+  )}
+</header>
+
+<!-- Rich content -->
+{content.length > 0 && (
+  <article class="max-w-prose-body mx-auto px-6 pt-12 pb-24 space-y-6" style="line-height:1.75;">
+    {content.map((block) => {
+      if (block.type === 'heading') {
+        return (
+          <h2 class="text-section-h font-medium text-ink mt-12 mb-0">{block.text}</h2>
+        );
+      }
+      if (block.type === 'subtitle') {
+        return (
+          <p class="text-xs font-medium uppercase tracking-wide-sm text-ink-muted -mb-3">{block.text}</p>
+        );
+      }
+      if (block.type === 'paragraph') {
+        return (
+          <p class="text-base text-ink-soft" set:html={block.text} />
+        );
+      }
+      if (block.type === 'quote') {
+        return (
+          <blockquote class="border-l-2 border-ink pl-5 italic text-ink-soft text-lg">
+            {block.text}
+          </blockquote>
+        );
+      }
+      if (block.type === 'bullet_list') {
+        return (
+          <ul class="space-y-2 pl-1">
+            {block.items.map((item) => (
+              <li class="flex items-start gap-3 text-base text-ink-soft">
+                <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
+                <span set:html={item} />
+              </li>
+            ))}
+          </ul>
+        );
+      }
+      if (block.type === 'numbered_list') {
+        return (
+          <ol class="space-y-2 pl-1 list-none">
+            {block.items.map((item, i) => (
+              <li class="flex items-start gap-3 text-base text-ink-soft">
+                <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
+                <span set:html={item} />
+              </li>
+            ))}
+          </ol>
+        );
+      }
+      if (block.type === 'image') {
+        return (
+          <figure>
+            <img
+              src={block.url}
+              alt={block.alt ?? ''}
+              class="w-full rounded-xl bg-border-light"
+              loading="lazy"
+            />
+            {block.alt && (
+              <figcaption class="mt-2 text-center text-xs text-ink-muted">
+                {block.alt}
+              </figcaption>
+            )}
+          </figure>
+        );
+      }
+    })}
+  </article>
+)}
+
+<!-- Bottom navigation -->
+{(prev || next) && (
+  <div class="max-w-article mx-auto px-6 mb-16 pt-8 border-t border-border-light flex justify-between">
+    {prev ? (
+      <a href={`/case/${prev.slug}`} class="text-sm text-ink-muted hover:text-ink transition-colors duration-150">
+        ← {prev.title}
+      </a>
+    ) : <span />}
+    {next ? (
+      <a href={`/case/${next.slug}`} class="text-sm text-ink-muted hover:text-ink transition-colors duration-150">
+        {next.title} →
+      </a>
+    ) : <span />}
+  </div>
+)}

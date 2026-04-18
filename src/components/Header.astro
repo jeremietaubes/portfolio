@@ -1,0 +1,57 @@
+---
+---
+
+<header class="sticky top-0 z-50 bg-cream border-b border-border-warm">
+  <div class="flex items-center justify-between px-10 py-4.5">
+    <a href="/" class="text-sm font-medium text-ink">Jérémie Taubes</a>
+
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="/#work" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Work</a>
+      <a href="/experience" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Expérience</a>
+      <a href="/formations" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Formations</a>
+      <a href="/about" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">About</a>
+      <a href="#contact" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Contact</a>
+    </nav>
+
+    <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Ouvrir le menu">
+      <span id="bar1" class="block w-5 bg-ink" style="height:1px;transition:transform .15s ease,opacity .15s ease;"></span>
+      <span id="bar2" class="block w-5 bg-ink" style="height:1px;transition:opacity .15s ease;"></span>
+      <span id="bar3" class="block w-5 bg-ink" style="height:1px;transition:transform .15s ease;"></span>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden md:hidden border-t border-border-warm bg-cream">
+    <nav class="flex flex-col px-10 py-6 gap-5">
+      <a href="/#work" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Work</a>
+      <a href="/experience" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Expérience</a>
+      <a href="/formations" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Formations</a>
+      <a href="/about" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">About</a>
+      <a href="#contact" class="text-xs uppercase tracking-wide-sm text-ink-muted hover:text-ink transition-colors duration-150">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu   = document.getElementById('mobile-menu');
+  const bar1   = document.getElementById('bar1');
+  const bar2   = document.getElementById('bar2');
+  const bar3   = document.getElementById('bar3');
+  let open = false;
+
+  toggle?.addEventListener('click', () => {
+    open = !open;
+    menu?.classList.toggle('hidden', !open);
+    if (bar1 && bar2 && bar3) {
+      if (open) {
+        bar1.style.transform = 'translateY(6px) rotate(45deg)';
+        bar2.style.opacity   = '0';
+        bar3.style.transform = 'translateY(-6px) rotate(-45deg)';
+      } else {
+        bar1.style.transform = '';
+        bar2.style.opacity   = '';
+        bar3.style.transform = '';
+      }
+    }
+  });
+</script>

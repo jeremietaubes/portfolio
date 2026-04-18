@@ -1,0 +1,65 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+
+const competences = [
+  "UX Research",
+  "Prototypage",
+  "Design System",
+  "Product Strategy",
+  "Figma",
+  "Tests utilisateurs",
+  "Information Architecture",
+  "Accessibility (WCAG)",
+];
+---
+
+<Layout title="About — Jérémie Taubes">
+  <Header />
+  <main class="px-10 py-18 min-h-screen">
+    <div class="max-w-prose-body mx-auto">
+
+      <div class="flex items-center gap-4 mb-12">
+        <span class="text-xs uppercase tracking-wide-lg text-ink-muted whitespace-nowrap">About</span>
+        <div class="flex-1 h-px bg-border-warm"></div>
+      </div>
+
+      <div class="space-y-6 mb-16">
+        <p class="text-base text-ink-soft leading-relaxed">
+          Je suis designer produit basé à Paris. Je travaille à l'intersection
+          de la recherche utilisateur, du design d'interface et de la stratégie
+          produit.
+        </p>
+        <p class="text-base text-ink-soft leading-relaxed">
+          Mon approche : comprendre les vrais problèmes avant de dessiner des
+          solutions. J'ai conçu des produits utilisés par des milliers de
+          personnes — des outils SaaS B2B aux apps grand public, en passant par
+          des greentech qui ont convaincu des ministères et des maisons de luxe.
+        </p>
+        <p class="text-base text-ink-soft leading-relaxed">
+          En dehors du travail, je m'intéresse à la typographie, au design
+          éditorial, et à l'impact des interfaces sur le comportement des
+          utilisateurs.
+        </p>
+      </div>
+
+      <div>
+        <div class="flex items-center gap-4 mb-8">
+          <span class="text-xs uppercase tracking-wide-lg text-ink-muted whitespace-nowrap">Compétences</span>
+          <div class="flex-1 h-px bg-border-warm"></div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          {competences.map((c) => (
+            <span class="text-xs uppercase tracking-wide-sm text-ink-muted border border-border-warm rounded-full px-3 py-1">
+              {c}
+            </span>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </main>
+  <Footer />
+</Layout>

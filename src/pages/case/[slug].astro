@@ -1,0 +1,43 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import CaseStudyPage from "@/components/CaseStudyPage.astro";
+import { getAllCaseStudies } from "@/lib/notion";
+import { getContentById } from "@/utils/notion-id";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const caseStudies = await getAllCaseStudies();
+  return caseStudies.map((cs) => ({
+    params: { slug: cs.slug },
+    props: { caseStudy: cs },
+  }));
+};
+
+const { slug } = Astro.params;
+const { caseStudy } = Astro.props;
+
+if (!caseStudy) {
+  return Astro.redirect("/404");
+}
+
+const content = await getContentById(caseStudy.id);
+const allCaseStudies = await getAllCaseStudies();
+const currentIndex = allCaseStudies.findIndex((cs) => cs.slug === slug);
+const prev = currentIndex > 0 ? allCaseStudies[currentIndex - 1] : undefined;
+const next = currentIndex < allCaseStudies.length - 1 ? allCaseStudies[currentIndex + 1] : undefined;
+---
+
+<Layout title={`${caseStudy.title} — Jérémie Taubes`} description={caseStudy.summary}>
+  <Header />
+  <main>
+    <CaseStudyPage
+      caseStudy={caseStudy}
+      content={content}
+      prev={prev}
+      next={next}
+    />
+  </main>
+  <Footer />
+</Layout>
