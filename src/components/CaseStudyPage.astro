@@ -58,7 +58,7 @@ const { caseStudy, content, prev, next } = Astro.props;
 
 <!-- Cover image -->
 {caseStudy.coverImage ? (
-  <div class="mt-6 mb-6 px-6 max-w-5xl mx-auto">
+  <div class="px-6 max-w-5xl mx-auto">
     <img
       src={caseStudy.coverImage}
       alt={caseStudy.title}
@@ -67,7 +67,7 @@ const { caseStudy, content, prev, next } = Astro.props;
     />
   </div>
 ) : (
-  <div class="mt-6 mb-6 px-6 max-w-5xl mx-auto">
+  <div class="px-6 max-w-5xl mx-auto">
     <div class="w-full rounded-2xl bg-border-light" style="height:320px;"></div>
   </div>
 )}
@@ -92,7 +92,7 @@ const { caseStudy, content, prev, next } = Astro.props;
       if (block.type === 'heading') {
         return (
           <div class="max-w-prose-body mx-auto px-6 mb-6">
-            <h2 class="font-display text-section-h text-ink mt-6 mb-0 tracking-normal">{block.text}</h2>
+            <h2 class="font-display text-section-h md:text-display-sm text-ink mt-6 mb-0 tracking-normal">{block.text}</h2>
           </div>
         );
       }
