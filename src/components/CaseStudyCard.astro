@@ -34,31 +34,32 @@ const { title, description, tags, client, year, coverImage, slug, location } = A
 
   <!-- Content -->
   <div class="p-7">
-    <!-- Client · Location · Year -->
-    <p class="text-xs text-ink-muted mb-4">
-      {client && <span class="font-medium text-ink">{client}</span>}
-      {client && (location || year) && <span class="mx-2 text-border-warm">|</span>}
-      {[location, String(year)].filter(Boolean).join(' · ')}
-    </p>
+    <!-- Client -->
+    {client && (
+      <p class="font-display font-medium text-ink mb-2" style="font-size:13px;">{client}</p>
+    )}
 
     <!-- Title -->
     <h2 class="font-display text-section-h text-ink mb-3 tracking-tight-xl">{title}</h2>
 
+    <!-- Summary -->
+    <p class="text-sm text-ink-muted leading-relaxed line-clamp-2">{description}</p>
+
     <!-- Tags -->
     {tags.length > 0 && (
-      <div class="flex flex-wrap gap-2 mb-3">
+      <div class="flex flex-wrap gap-2 mt-3">
         {tags.map((tag) => (
-          <span class="inline-block px-2.5 py-0.5 rounded-full bg-border-light text-ink-soft text-xs font-medium">{tag}</span>
+          <span class="inline-block px-2.5 py-0.5 rounded-full border border-border-warm text-ink-soft text-xs font-medium">{tag}</span>
         ))}
       </div>
     )}
 
-    <!-- Summary -->
-    <p class="text-sm text-ink-muted leading-relaxed line-clamp-2">{description}</p>
-
-    <!-- CTA -->
-    <div class="mt-5 flex items-center justify-end gap-1.5 text-sm font-medium text-ink group-hover:gap-3 transition-all duration-150">
-      Voir le projet <span class="text-base">→</span>
+    <!-- Bottom row: Location · Year + CTA -->
+    <div class="mt-5 flex items-center justify-between gap-2">
+      <span class="text-xs text-ink-muted">{[location, String(year)].filter(Boolean).join(' · ')}</span>
+      <span class="flex items-center gap-1.5 text-sm font-medium text-ink group-hover:gap-3 transition-all duration-150">
+        Lire le projet <span class="text-base">→</span>
+      </span>
     </div>
   </div>
 </a>

@@ -23,18 +23,18 @@ const { caseStudy, content, prev, next } = Astro.props;
 
 <!-- Title + summary + tags -->
 <header class="max-w-article mx-auto px-6 pt-8 pb-8">
-  {caseStudy.tags.length > 0 && (
-    <div class="flex flex-wrap gap-2 mb-5">
-      {caseStudy.tags.map((tag) => (
-        <span class="inline-block px-2.5 py-0.5 rounded-full bg-border-light text-ink-soft text-sm font-medium">{tag}</span>
-      ))}
-    </div>
-  )}
   <h1 class="font-display text-display-sm md:text-display tracking-tight-xl text-ink mb-4">
     {caseStudy.title}
   </h1>
   {caseStudy.summary && (
     <p class="text-lg text-ink-soft leading-relaxed mb-4">{caseStudy.summary}</p>
+  )}
+  {caseStudy.tags.length > 0 && (
+    <div class="flex flex-wrap gap-2 mb-5">
+      {caseStudy.tags.map((tag) => (
+        <span class="inline-block px-2.5 py-0.5 rounded-full border border-border-warm text-ink-soft text-sm font-medium">{tag}</span>
+      ))}
+    </div>
   )}
   <div class="border-t border-border-warm mt-6 pt-6 flex justify-between">
     {caseStudy.client && (
