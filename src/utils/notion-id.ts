@@ -20,7 +20,16 @@ function richTextToHtml(richText: any[]): string {
   }).join("");
 }
 
-function parseBlocks(blocks: any[]): ContentBlock[] {
+async function fetchChildren(blockId: string): Promise<any[]> {
+  try {
+    const res = await notion.blocks.children.list({ block_id: blockId });
+    return res.results;
+  } catch {
+    return [];
+  }
+}
+
+async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
   const result: ContentBlock[] = [];
 
   for (const block of blocks) {
@@ -37,8 +46,17 @@ function parseBlocks(blocks: any[]): ContentBlock[] {
         break;
       }
       case "paragraph": {
-        const html = richTextToHtml(block.paragraph.rich_text);
-        if (html) result.push({ type: "paragraph", text: html });
+        const plain = richTextToString(block.paragraph.rich_text).trim();
+        const match = plain.match(/^>>(\d+)\s*([\s\S]*)$/);
+        if (match) {
+          const num = match[1];
+          const html = richTextToHtml(block.paragraph.rich_text);
+          const textHtml = html.replace(/^(<(?:strong|em|b|i)[^>]*>)?&gt;&gt;\d+\s*/, '$1');
+          result.push({ type: "numbered_item", num, text: textHtml });
+        } else {
+          const html = richTextToHtml(block.paragraph.rich_text);
+          if (html) result.push({ type: "paragraph", text: html });
+        }
         break;
       }
       case "quote": {
@@ -47,8 +65,16 @@ function parseBlocks(blocks: any[]): ContentBlock[] {
         break;
       }
       case "bulleted_list_item": {
-        const html = richTextToHtml(block.bulleted_list_item.rich_text);
+        let html = richTextToHtml(block.bulleted_list_item.rich_text);
         if (!html) break;
+        if (block.has_children) {
+          const children = await fetchChildren(block.id);
+          const subItems = children
+            .filter((c: any) => c.type === "bulleted_list_item")
+            .map((c: any) => `<li>${richTextToHtml(c.bulleted_list_item.rich_text)}</li>`)
+            .join("");
+          if (subItems) html += `<ul class="sub-list">${subItems}</ul>`;
+        }
         const last = result[result.length - 1];
         if (last?.type === "bullet_list") {
           last.items.push(html);
@@ -93,7 +119,7 @@ export async function getContentById(id: string): Promise<ContentBlock[]> {
   if (!import.meta.env.NOTION_API_KEY) return [];
   try {
     const res = await notion.blocks.children.list({ block_id: id });
-    return parseBlocks(res.results);
+    return await parseBlocks(res.results);
   } catch {
     return [];
   }

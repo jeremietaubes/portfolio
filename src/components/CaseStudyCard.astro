@@ -36,7 +36,7 @@ const { title, description, tags, client, year, coverImage, slug, location } = A
   <div class="p-7">
     <!-- Client -->
     {client && (
-      <p class="font-display font-medium text-ink mb-2" style="font-size:13px;">{client}</p>
+      <p class="font-display font-normal text-ink mb-2" style="font-size:14px;">{client}</p>
     )}
 
     <!-- Title -->
@@ -48,7 +48,7 @@ const { title, description, tags, client, year, coverImage, slug, location } = A
     <!-- Tags -->
     {tags.length > 0 && (
       <div class="flex flex-wrap gap-2 mt-3">
-        {tags.map((tag) => (
+        {tags.slice(0, 3).map((tag) => (
           <span class="inline-block px-2.5 py-0.5 rounded-full border border-border-warm text-ink-soft text-xs font-medium">{tag}</span>
         ))}
       </div>

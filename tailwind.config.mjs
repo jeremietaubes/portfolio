@@ -7,7 +7,7 @@ export default {
         'cream':        '#FAFAF7',
         'ink':          '#141413',
         'ink-soft':     '#3D3D3A',
-        'ink-muted':    '#8A8878',
+        'ink-muted':    '#6B6B6B',
         'ink-faint':    '#C0BFBA',
         'border-warm':  '#E0DED6',
         'border-light': '#F0EEE8',

@@ -20,4 +20,5 @@ export type ContentBlock =
   | { type: "image"; url: string; alt: string }
   | { type: "bullet_list"; items: string[] }
   | { type: "numbered_list"; items: string[] }
-  | { type: "callout"; text: string; emoji?: string };
+  | { type: "callout"; text: string; emoji?: string }
+  | { type: "numbered_item"; num: string; text: string };
