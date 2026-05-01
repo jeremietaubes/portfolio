@@ -101,7 +101,16 @@ function notionPageToCaseStudy(page: any): CaseStudy {
   };
 }
 
-function parseBlocks(blocks: any[]): ContentBlock[] {
+async function fetchChildren(blockId: string): Promise<any[]> {
+  try {
+    const res = await notion.blocks.children.list({ block_id: blockId });
+    return res.results;
+  } catch {
+    return [];
+  }
+}
+
+async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
   const result: ContentBlock[] = [];
 
   for (const block of blocks) {
@@ -127,22 +136,44 @@ function parseBlocks(blocks: any[]): ContentBlock[] {
         break;
       }
       case "bulleted_list_item": {
-        const text = richTextToString(block.bulleted_list_item.rich_text);
+        let text = richTextToString(block.bulleted_list_item.rich_text);
         if (!text) break;
-        const last = result[result.length - 1];
-        if (last?.type === "bullet_list") {
-          last.items.push(text);
+        if (block.has_children) {
+          const children = await fetchChildren(block.id);
+          const subItems = children
+            .filter((c: any) => c.type === "bulleted_list_item" || c.type === "numbered_list_item")
+            .map((c: any) => {
+              const key = c.type === "bulleted_list_item" ? "bulleted_list_item" : "numbered_list_item";
+              return `<li>${richTextToString(c[key].rich_text)}</li>`;
+            })
+            .join("");
+          if (subItems) text += `<ul class="sub-list">${subItems}</ul>`;
+        }
+        const lastB = result[result.length - 1];
+        if (lastB?.type === "bullet_list") {
+          lastB.items.push(text);
         } else {
           result.push({ type: "bullet_list", items: [text] });
         }
         break;
       }
       case "numbered_list_item": {
-        const text = richTextToString(block.numbered_list_item.rich_text);
+        let text = richTextToString(block.numbered_list_item.rich_text);
         if (!text) break;
-        const last = result[result.length - 1];
-        if (last?.type === "numbered_list") {
-          last.items.push(text);
+        if (block.has_children) {
+          const children = await fetchChildren(block.id);
+          const subItems = children
+            .filter((c: any) => c.type === "bulleted_list_item" || c.type === "numbered_list_item")
+            .map((c: any) => {
+              const key = c.type === "bulleted_list_item" ? "bulleted_list_item" : "numbered_list_item";
+              return `<li>${richTextToString(c[key].rich_text)}</li>`;
+            })
+            .join("");
+          if (subItems) text += `<ul class="sub-list">${subItems}</ul>`;
+        }
+        const lastN = result[result.length - 1];
+        if (lastN?.type === "numbered_list") {
+          lastN.items.push(text);
         } else {
           result.push({ type: "numbered_list", items: [text] });
         }
@@ -232,7 +263,7 @@ export async function getCaseStudyBySlug(
     const caseStudy = notionPageToCaseStudy(page);
 
     const blocksResponse = await notion.blocks.children.list({ block_id: page.id });
-    caseStudy.content = parseBlocks(blocksResponse.results);
+    caseStudy.content = await parseBlocks(blocksResponse.results);
 
     return caseStudy;
   } catch (err) {

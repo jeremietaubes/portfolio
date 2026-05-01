@@ -70,25 +70,39 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
         if (block.has_children) {
           const children = await fetchChildren(block.id);
           const subItems = children
-            .filter((c: any) => c.type === "bulleted_list_item")
-            .map((c: any) => `<li>${richTextToHtml(c.bulleted_list_item.rich_text)}</li>`)
+            .filter((c: any) => c.type === "bulleted_list_item" || c.type === "numbered_list_item")
+            .map((c: any) => {
+              const key = c.type === "bulleted_list_item" ? "bulleted_list_item" : "numbered_list_item";
+              return `<li>${richTextToHtml(c[key].rich_text)}</li>`;
+            })
             .join("");
           if (subItems) html += `<ul class="sub-list">${subItems}</ul>`;
         }
-        const last = result[result.length - 1];
-        if (last?.type === "bullet_list") {
-          last.items.push(html);
+        const lastB = result[result.length - 1];
+        if (lastB?.type === "bullet_list") {
+          lastB.items.push(html);
         } else {
           result.push({ type: "bullet_list", items: [html] });
         }
         break;
       }
       case "numbered_list_item": {
-        const html = richTextToHtml(block.numbered_list_item.rich_text);
+        let html = richTextToHtml(block.numbered_list_item.rich_text);
         if (!html) break;
-        const last = result[result.length - 1];
-        if (last?.type === "numbered_list") {
-          last.items.push(html);
+        if (block.has_children) {
+          const children = await fetchChildren(block.id);
+          const subItems = children
+            .filter((c: any) => c.type === "bulleted_list_item" || c.type === "numbered_list_item")
+            .map((c: any) => {
+              const key = c.type === "bulleted_list_item" ? "bulleted_list_item" : "numbered_list_item";
+              return `<li>${richTextToHtml(c[key].rich_text)}</li>`;
+            })
+            .join("");
+          if (subItems) html += `<ul class="sub-list">${subItems}</ul>`;
+        }
+        const lastN = result[result.length - 1];
+        if (lastN?.type === "numbered_list") {
+          lastN.items.push(html);
         } else {
           result.push({ type: "numbered_list", items: [html] });
         }
