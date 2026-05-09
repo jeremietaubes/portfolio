@@ -4,7 +4,7 @@ interface Props {
   description: string;
   tags: string[];
   client?: string;
-  year: number;
+  year: string;
   coverImage: string;
   slug: string;
   index: number;
@@ -53,7 +53,7 @@ const { title, description, tags, client, year, coverImage, slug, location } = A
 
     <!-- Bottom row: Location · Year + CTA -->
     <div class="mt-5 flex items-center justify-between gap-2">
-      <span class="text-xs text-ink-muted">{[location, String(year)].filter(Boolean).join(' · ')}</span>
+      <span class="text-xs text-ink-muted">{[location, year].filter(Boolean).join(' · ')}</span>
       <span class="flex items-center gap-1.5 text-sm font-medium text-ink group-hover:gap-3 transition-all duration-150">
         Lire le projet <span class="text-base">→</span>
       </span>

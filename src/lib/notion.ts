@@ -62,6 +62,19 @@ function richTextToString(richText: any[]): string {
   return richText.map((t: any) => t.plain_text).join("");
 }
 
+function richTextToHtml(richText: any[]): string {
+  return richText.map((t: any) => {
+    let text = t.plain_text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\n/g, "<br>");
+    if (t.annotations?.bold) text = `<strong>${text}</strong>`;
+    if (t.annotations?.italic) text = `<em>${text}</em>`;
+    return text;
+  }).join("");
+}
+
 function pageToSlug(title: string): string {
   return title
     .toLowerCase()
@@ -78,9 +91,9 @@ function notionPageToCaseStudy(page: any): CaseStudy {
       ? richTextToString(props.Slug.rich_text)
       : pageToSlug(richTextToString(props.Nom.title)),
     title: richTextToString(props.Nom.title),
-    summary: richTextToString(props.Summary?.rich_text ?? []),
+    summary: richTextToHtml(props.Summary?.rich_text ?? []),
     client: richTextToString(props.Client?.rich_text ?? []),
-    year: props.Year?.number ?? new Date().getFullYear(),
+    year: richTextToString(props.Year?.rich_text ?? []),
     tags: props.Tags?.multi_select?.map((t: any) => t.name) ?? [],
     coverImage: (() => {
       // Champ Text (rich_text) : nom de fichier local, ex: "finbank-cover.webp"
@@ -180,10 +193,25 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
         break;
       }
       case "callout": {
-        const text = richTextToString(block.callout.rich_text);
-        if (!text) break;
+        const plain = richTextToString(block.callout.rich_text);
+        if (plain.startsWith("[supertitle]")) {
+          result.push({ type: "subtitle", text: plain.replace("[supertitle]", "").trim() });
+          break;
+        }
         const emoji = block.callout.icon?.type === "emoji" ? block.callout.icon.emoji : undefined;
-        result.push({ type: "callout", text, emoji });
+        let text = richTextToHtml(block.callout.rich_text);
+        if (block.has_children) {
+          const children = await fetchChildren(block.id);
+          const listItems = children
+            .filter((c: any) => c.type === "bulleted_list_item" || c.type === "numbered_list_item")
+            .map((c: any) => {
+              const key = c.type === "bulleted_list_item" ? "bulleted_list_item" : "numbered_list_item";
+              return `<li>${richTextToHtml(c[key].rich_text)}</li>`;
+            })
+            .join("");
+          if (listItems) text += `<ul class="callout-list">${listItems}</ul>`;
+        }
+        if (text) result.push({ type: "callout", text, emoji });
         break;
       }
       case "equation": {
@@ -210,7 +238,7 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
 // ─── Cache ─────────────────────────────────────────────────────────────────
 
 let cacheAll: { data: CaseStudy[]; ts: number } | null = null;
-const CACHE_TTL = 60_000; // 60s
+const CACHE_TTL = import.meta.env.DEV ? 0 : 60_000;
 
 // ─── Public API ────────────────────────────────────────────────────────────
 
@@ -244,30 +272,6 @@ export async function getAllCaseStudies(): Promise<CaseStudy[]> {
 export async function getCaseStudyBySlug(
   slug: string
 ): Promise<CaseStudy | undefined> {
-  if (!import.meta.env.NOTION_API_KEY || !import.meta.env.NOTION_DATABASE_ID) {
-    return MOCK_CASE_STUDIES.find((cs) => cs.slug === slug);
-  }
-
-  try {
-    const response = await notion.databases.query({
-      database_id: DATABASE_ID,
-      filter: {
-        property: "Slug",
-        rich_text: { equals: slug },
-      },
-    });
-
-    if (!response.results.length) return undefined;
-
-    const page = response.results[0] as any;
-    const caseStudy = notionPageToCaseStudy(page);
-
-    const blocksResponse = await notion.blocks.children.list({ block_id: page.id });
-    caseStudy.content = await parseBlocks(blocksResponse.results);
-
-    return caseStudy;
-  } catch (err) {
-    console.warn("[notion] getCaseStudyBySlug failed, using mock data:", (err as Error).message);
-    return MOCK_CASE_STUDIES.find((cs) => cs.slug === slug);
-  }
+  const all = await getAllCaseStudies();
+  return all.find((cs) => cs.slug === slug);
 }

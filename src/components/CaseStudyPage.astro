@@ -16,9 +16,9 @@ const { caseStudy, content, prev, next } = Astro.props;
 <div class="max-w-article mx-auto px-6 pt-10">
   <a
     href="/"
-    class="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wide-xs bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150"
+    class="inline-flex items-center gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150"
   >
-    ← Retour
+    ← Back
   </a>
 </div>
 
@@ -28,7 +28,7 @@ const { caseStudy, content, prev, next } = Astro.props;
     {caseStudy.title}
   </h1>
   {caseStudy.summary && (
-    <p class="text-lg text-ink-soft leading-relaxed mb-4">{caseStudy.summary}</p>
+    <p class="text-lg text-ink-soft leading-relaxed mb-4" set:html={caseStudy.summary} />
   )}
   {caseStudy.tags.length > 0 && (
     <div class="flex flex-wrap gap-2 mb-5">
@@ -208,6 +208,31 @@ const { caseStudy, content, prev, next } = Astro.props;
     flex-shrink: 0;
     margin-top: 10px;
   }
+  :global(.callout-list) {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  :global(.callout-list li) {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 1rem;
+    color: #3D3D3A;
+  }
+  :global(.callout-list li)::before {
+    content: "";
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #C0BFBA;
+    flex-shrink: 0;
+    margin-top: 10px;
+  }
   .num-badge {
     min-width: 24px;
     height: 24px;
@@ -228,12 +253,12 @@ const { caseStudy, content, prev, next } = Astro.props;
 {(prev || next) && (
   <div class="max-w-card-list mx-auto px-6 mb-16 pt-8 border-t border-border-warm flex justify-between gap-4">
     {prev ? (
-      <a href={`/case/${prev.slug}`} title={prev.title} class="flex-1 md:flex-none inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wide-xs bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150">
+      <a href={`/case/${prev.slug}`} title={prev.title} class="flex-1 md:flex-none inline-flex items-center gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150">
         ← <span class="line-clamp-2 md:line-clamp-1 max-w-[42ch]">{prev.title}</span>
       </a>
     ) : <span class="flex-1 md:flex-none" />}
     {next ? (
-      <a href={`/case/${next.slug}`} title={next.title} class="flex-1 md:flex-none inline-flex items-center justify-end gap-2 text-xs font-medium uppercase tracking-wide-xs bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150">
+      <a href={`/case/${next.slug}`} title={next.title} class="flex-1 md:flex-none inline-flex items-center justify-end gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150">
         <span class="line-clamp-2 md:line-clamp-1 max-w-[42ch]">{next.title}</span> →
       </a>
     ) : <span class="flex-1 md:flex-none" />}

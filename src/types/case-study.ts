@@ -4,7 +4,7 @@ export interface CaseStudy {
   title: string;
   summary: string;
   client: string;
-  year: number;
+  year: string;
   tags: string[];
   coverImage: string;
   location: string;

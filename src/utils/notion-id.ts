@@ -13,7 +13,8 @@ function richTextToHtml(richText: any[]): string {
     let text = t.plain_text
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+      .replace(/>/g, "&gt;")
+      .replace(/\n/g, "<br>");
     if (t.annotations?.bold) text = `<strong>${text}</strong>`;
     if (t.annotations?.italic) text = `<em>${text}</em>`;
     return text;
@@ -22,8 +23,14 @@ function richTextToHtml(richText: any[]): string {
 
 async function fetchChildren(blockId: string): Promise<any[]> {
   try {
-    const res = await notion.blocks.children.list({ block_id: blockId });
-    return res.results;
+    const results: any[] = [];
+    let cursor: string | undefined;
+    do {
+      const res = await notion.blocks.children.list({ block_id: blockId, start_cursor: cursor, page_size: 100 });
+      results.push(...res.results);
+      cursor = res.has_more ? (res.next_cursor ?? undefined) : undefined;
+    } while (cursor);
+    return results;
   } catch {
     return [];
   }
@@ -41,8 +48,25 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
         break;
       }
       case "callout": {
-        const text = richTextToString(block.callout.rich_text);
-        if (text) result.push({ type: "subtitle", text });
+        const plain = richTextToString(block.callout.rich_text).trim();
+        if (plain.startsWith("[supertitle]")) {
+          result.push({ type: "subtitle", text: plain.replace("[supertitle]", "").trim() });
+          break;
+        }
+        const emoji = block.callout.icon?.type === "emoji" ? block.callout.icon.emoji : undefined;
+        let text = richTextToHtml(block.callout.rich_text);
+        if (block.has_children) {
+          const children = await fetchChildren(block.id);
+          const listItems = children
+            .filter((c: any) => c.type === "bulleted_list_item" || c.type === "numbered_list_item")
+            .map((c: any) => {
+              const key = c.type === "bulleted_list_item" ? "bulleted_list_item" : "numbered_list_item";
+              return `<li>${richTextToHtml(c[key].rich_text)}</li>`;
+            })
+            .join("");
+          if (listItems) text += `<ul class="callout-list">${listItems}</ul>`;
+        }
+        if (text) result.push({ type: "callout", text, emoji });
         break;
       }
       case "paragraph": {
@@ -60,8 +84,16 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
         break;
       }
       case "quote": {
-        const text = richTextToString(block.quote.rich_text);
+        let text = richTextToString(block.quote.rich_text);
+        if (!text && block.has_children) {
+          const children = await fetchChildren(block.id);
+          text = children
+            .filter((c: any) => c.type === "paragraph")
+            .map((c: any) => richTextToString(c.paragraph.rich_text))
+            .join(" ");
+        }
         if (text) result.push({ type: "quote", text });
+
         break;
       }
       case "bulleted_list_item": {
@@ -132,8 +164,8 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
 export async function getContentById(id: string): Promise<ContentBlock[]> {
   if (!import.meta.env.NOTION_API_KEY) return [];
   try {
-    const res = await notion.blocks.children.list({ block_id: id });
-    return await parseBlocks(res.results);
+    const blocks = await fetchChildren(id);
+    return await parseBlocks(blocks);
   } catch {
     return [];
   }
