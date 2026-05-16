@@ -5,11 +5,11 @@ import Footer from "@/components/Footer.astro";
 import NotionContent from "@/components/NotionContent.astro";
 import { getContentById, getPageTitle } from "@/utils/notion-id";
 
-const PAGE_ID = "362abc1d446d805d8a1ffd0cec67381f";
+const PAGE_ID = "362abc1d446d8072b0efda3c0c747f8f";
 const [title, content] = await Promise.all([getPageTitle(PAGE_ID), getContentById(PAGE_ID)]);
 ---
 
-<Layout title="About — Jérémie Taubes">
+<Layout title="Education — Jérémie Taubes">
   <Header />
   <main class="px-10 pt-12 pb-18 min-h-screen">
     {title && (

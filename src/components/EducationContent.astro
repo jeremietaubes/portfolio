@@ -1,0 +1,84 @@
+---
+import type { ContentBlock } from "@/types/case-study";
+
+interface Props {
+  content: ContentBlock[];
+}
+
+const { content } = Astro.props;
+
+// Split blocks into groups separated by dividers
+const groups: ContentBlock[][] = [];
+let current: ContentBlock[] = [];
+for (const block of content) {
+  if (block.type === "divider") {
+    if (current.length > 0) groups.push(current);
+    current = [];
+  } else {
+    current.push(block);
+  }
+}
+if (current.length > 0) groups.push(current);
+
+// Within each group: headings go left, everything else goes right
+function splitGroup(blocks: ContentBlock[]) {
+  const left = blocks.filter((b) => b.type === "heading" || b.type === "heading3");
+  const right = blocks.filter((b) => b.type !== "heading" && b.type !== "heading3");
+  return { left, right };
+}
+---
+
+<div class="max-w-hero-inner mx-auto px-6">
+  {groups.map((group, i) => {
+    const { left, right } = splitGroup(group);
+    return (
+      <div class={`grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-x-12 py-10 ${i < groups.length - 1 ? "border-b border-border-warm" : ""}`}>
+
+        <!-- Left: title + subtitle -->
+        <div class="mb-4 md:mb-0">
+          {left.map((block) => {
+            if (block.type === "heading") {
+              return <h2 class="font-display font-semibold text-section-h text-ink mb-2 leading-h2">{block.text}</h2>;
+            }
+            if (block.type === "heading3") {
+              return <p class="text-sm text-ink-muted">{block.text}</p>;
+            }
+          })}
+        </div>
+
+        <!-- Right: body text + skills -->
+        <div class="space-y-4">
+          {right.map((block) => {
+            if (block.type === "paragraph") {
+              return <p class="font-reading text-xl leading-prose text-ink-soft" set:html={block.text} />;
+            }
+            if (block.type === "bullet_list") {
+              return (
+                <ul class="space-y-2 pl-1">
+                  {block.items.map((item) => (
+                    <li class="flex items-start gap-3 text-xl text-ink-soft">
+                      <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
+                      <span class="font-reading" set:html={item} />
+                    </li>
+                  ))}
+                </ul>
+              );
+            }
+            if (block.type === "quote") {
+              return <blockquote class="border-l-2 border-ink-muted pl-5 text-ink-soft font-reading text-xl leading-prose" set:html={block.text} />;
+            }
+            if (block.type === "callout") {
+              return (
+                <div class="bg-white ring-1 ring-border-warm rounded-2xl px-8 py-6 flex gap-4 items-start">
+                  {block.emoji && <span class="text-2xl shrink-0 mt-0.5">{block.emoji}</span>}
+                  <p class="font-reading text-xl leading-prose text-ink-soft" set:html={block.text} />
+                </div>
+              );
+            }
+          })}
+        </div>
+
+      </div>
+    );
+  })}
+</div>

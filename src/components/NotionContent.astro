@@ -1,0 +1,323 @@
+---
+import type { ContentBlock } from "@/types/case-study";
+
+interface Props {
+  content: ContentBlock[];
+  font?: "reading" | "sans";
+  maxWidth?: string;
+}
+
+const { content, font = "reading", maxWidth = "max-w-prose-body" } = Astro.props;
+const bodyFont = font === "sans" ? "font-sans" : "font-reading";
+---
+
+{content.map((block) => {
+  if (block.type === 'column_list') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-8`}>
+        <div class="grid gap-8 column-grid" style={`grid-template-columns: repeat(${block.columns.length}, minmax(0, 1fr))`}>
+          {block.columns.map((col, colIndex) => {
+            const isRight = colIndex > 0;
+            const textSize = "text-xl";
+            return (
+            <div class={isRight ? "space-y-4" : "space-y-1"}>
+              {col.map((b) => {
+                if (b.type === 'heading') return <h2 class={`font-display font-semibold text-section-h md:text-display-sm text-ink mb-0 tracking-normal leading-h2 ${isRight ? "mt-6" : "mt-0"}`}>{b.text}</h2>;
+                if (b.type === 'heading3') return <h3 class={`font-display font-semibold text-[20px] text-ink mb-0 leading-h2 ![letter-spacing:0em] ${isRight ? "mt-4" : "mt-0"}`}>{b.text}</h3>;
+                if (b.type === 'paragraph') return <p class={`${bodyFont} ${textSize} leading-prose text-ink-soft`} set:html={b.text} />;
+                if (b.type === 'quote') return <blockquote class={`border-l-2 border-ink-muted pl-5 text-ink-soft ${bodyFont} ${textSize} leading-prose`} set:html={b.text} />;
+                if (b.type === 'bullet_list') return b.caption?.toLowerCase().includes('pills') ? (
+                  <div class="flex flex-wrap gap-2">
+                    {b.items.map((item) => (
+                      <span class={`inline-block px-2.5 py-0.5 rounded-full border border-border-warm text-ink-soft text-xs font-medium`} set:html={item} />
+                    ))}
+                  </div>
+                ) : (
+                  <ul class="space-y-2 pl-1">
+                    {b.items.map((item) => (
+                      <li class={`flex items-start gap-3 ${textSize} text-ink-soft`}>
+                        <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
+                        <span class={bodyFont} set:html={item} />
+                      </li>
+                    ))}
+                  </ul>
+                );
+                if (b.type === 'numbered_list') return (
+                  <ol class="space-y-2 pl-1 list-none">
+                    {b.items.map((item, i) => (
+                      <li class={`flex items-start gap-3 ${textSize} text-ink-soft`}>
+                        <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
+                        <span class={bodyFont} set:html={item} />
+                      </li>
+                    ))}
+                  </ol>
+                );
+                if (b.type === 'callout') return (
+                  <div class="bg-white ring-1 ring-border-warm rounded-2xl px-10 py-8 flex gap-4 items-start">
+                    {b.emoji && <span class="text-2xl shrink-0 mt-0.5">{b.emoji}</span>}
+                    <p class={`${bodyFont} ${textSize} leading-prose text-ink-soft`} set:html={b.text} />
+                  </div>
+                );
+                if (b.type === 'image') return (
+                  <img src={b.url} alt="" class="w-full object-cover rounded-2xl bg-border-light ring-1 ring-border-light" loading="lazy" />
+                );
+              })}
+            </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+  if (block.type === 'divider') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 my-10`}>
+        <hr class="border-t border-border-warm" />
+      </div>
+    );
+  }
+  if (block.type === 'image') {
+    return (
+      <div class="px-6 max-w-5xl mx-auto mb-14 mt-14">
+        <img
+          src={block.url}
+          alt=""
+          class="w-full object-cover rounded-2xl bg-border-light ring-1 ring-border-light max-h-block-image"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+  if (block.type === 'heading') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-8`}>
+        <h2 class="font-display font-semibold text-section-h md:text-display-sm text-ink mt-6 mb-0 tracking-normal leading-h2">{block.text}</h2>
+      </div>
+    );
+  }
+  if (block.type === 'heading3') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-4`}>
+        <h3 class="font-display font-semibold text-[20px] text-ink mt-4 mb-0 leading-h2 ![letter-spacing:0em]">{block.text}</h3>
+      </div>
+    );
+  }
+  if (block.type === 'subtitle') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mt-16 -mb-1`}>
+        <p class="pl-4 border-l border-border-warm text-base font-sans text-ink-muted font-normal py-2">{block.text}</p>
+      </div>
+    );
+  }
+  if (block.type === 'numbered_item') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-2`}>
+        <p class="numbered-item">
+          <span class="num-badge">{block.num}</span>
+          <span class={bodyFont} set:html={block.text} />
+        </p>
+      </div>
+    );
+  }
+  if (block.type === 'paragraph') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-8`}>
+        <p class={`${bodyFont} text-xl leading-prose text-ink-soft`} set:html={block.text} />
+      </div>
+    );
+  }
+  if (block.type === 'quote') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-8`}>
+        <blockquote class={`border-l-2 border-ink-muted pl-5 text-ink-soft ${bodyFont} text-xl leading-prose`} set:html={block.text} />
+      </div>
+    );
+  }
+  if (block.type === 'card_group') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-16 mt-14`}>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {block.items.map((item) => (
+            <div class="bg-white rounded-2xl border border-border-warm overflow-hidden">
+              <div class={`${bodyFont} text-base text-ink-soft leading-relaxed card-content`} set:html={item} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  if (block.type === 'bullet_list') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-8`}>
+        {block.caption?.trim() === '[pills]' ? (
+          <div class="flex flex-wrap gap-2">
+            {block.items.map((item) => (
+              <span class={`inline-block px-2.5 py-0.5 rounded-full border border-border-warm text-ink-soft text-xs font-medium`} set:html={item} />
+            ))}
+          </div>
+        ) : (
+          <ul class="space-y-2 pl-1">
+            {block.items.map((item) => (
+              <li class="flex items-start gap-3 text-xl text-ink-soft">
+                <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
+                <span class="font-reading" set:html={item} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
+  if (block.type === 'numbered_list') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-8`}>
+        <ol class="space-y-2 pl-1 list-none">
+          {block.items.map((item, i) => (
+            <li class="flex items-start gap-3 text-xl text-ink-soft">
+              <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
+              <span class="font-reading" set:html={item} />
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
+  }
+  if (block.type === 'callout') {
+    return (
+      <div class={`${maxWidth} mx-auto px-6 mb-8`}>
+        <div class="bg-white ring-1 ring-border-warm rounded-2xl px-10 py-8 flex gap-4 items-start">
+          {block.emoji && (
+            <span class="text-2xl shrink-0 mt-0.5">{block.emoji}</span>
+          )}
+          <p class={`${bodyFont} text-xl leading-prose text-ink-soft`} set:html={block.text} />
+        </div>
+      </div>
+    );
+  }
+})}
+
+<style>
+  :global(.card-header) {
+    padding: 20px 24px;
+    border-bottom: 1px solid #E0DED6;
+  }
+  :global(.card-h3) {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: #141413;
+    line-height: 1.28;
+    letter-spacing: 0;
+    margin: 0;
+  }
+  :global(.card-body) {
+    padding: 20px 24px 32px;
+  }
+  :global(.card-body ul) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  :global(.card-body li) {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 20px;
+    color: #3D3D3A;
+    line-height: 1.4;
+  }
+  :global(.card-body li)::before {
+    content: "";
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #C0BFBA;
+    flex-shrink: 0;
+    margin-top: 11px;
+  }
+  @media (max-width: 1023px) {
+    :global(.column-grid) {
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+    }
+  }
+  .numbered-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 8px 0;
+    margin-left: -16px;
+    font-size: 20px;
+    color: #3D3D3A;
+    line-height: 1.65;
+  }
+  :global(.sub-list) {
+    list-style: none;
+    margin-top: 6px;
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  :global(.sub-list li) {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  :global(.sub-list li)::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #C0BFBA;
+    flex-shrink: 0;
+    margin-top: 10px;
+  }
+  :global(.callout-list) {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  :global(.callout-list li) {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 1rem;
+    color: #3D3D3A;
+  }
+  :global(.callout-list li)::before {
+    content: "";
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #C0BFBA;
+    flex-shrink: 0;
+    margin-top: 10px;
+  }
+  .num-badge {
+    min-width: 24px;
+    height: 24px;
+    background: #141413;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+</style>

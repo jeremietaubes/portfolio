@@ -19,7 +19,10 @@ export type ContentBlock =
   | { type: "paragraph"; text: string }
   | { type: "quote"; text: string }
   | { type: "image"; url: string; alt: string }
-  | { type: "bullet_list"; items: string[] }
+  | { type: "bullet_list"; items: string[]; caption?: string }
   | { type: "numbered_list"; items: string[] }
   | { type: "callout"; text: string; emoji?: string }
-  | { type: "numbered_item"; num: string; text: string };
+  | { type: "numbered_item"; num: string; text: string }
+  | { type: "divider" }
+  | { type: "column_list"; columns: ContentBlock[][] }
+  | { type: "card_group"; items: string[] };

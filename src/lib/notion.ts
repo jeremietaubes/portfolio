@@ -178,7 +178,13 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
         if (lastB?.type === "bullet_list") {
           lastB.items.push(text);
         } else {
-          result.push({ type: "bullet_list", items: [text] });
+          // Check if the previous block is a caption paragraph (e.g. containing "pills")
+          const prev = result[result.length - 1];
+          let caption: string | undefined;
+          if (prev?.type === "paragraph" && prev.text.trim() === "[pills]") {
+            caption = result.pop()!.text;
+          }
+          result.push({ type: "bullet_list", items: [text], caption });
         }
         break;
       }
