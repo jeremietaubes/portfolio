@@ -17,7 +17,8 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        display: ['Bricolage Grotesque', 'sans-serif'],
+        display: ['Poppins', 'sans-serif'],
+        reading: ['"Source Serif 4"', 'serif'],
       },
       letterSpacing: {
         'tight-xl': '-0.03em',
@@ -27,15 +28,31 @@ export default {
         'wide-lg':  '0.09em',
       },
       fontSize: {
-        'display':    ['44px', { lineHeight: '1.08', fontWeight: '700' }],
-        'display-sm': ['28px', { lineHeight: '1.08', fontWeight: '700' }],
-        'section-h':  ['22px', { lineHeight: '1.4',  fontWeight: '700' }],
+        'display-xl': '48px',
+        'display':    '42px',
+        'display-sm': '30px',
+        'section-h':  '22px',
+        'card-h':     ['21px', { lineHeight: '1.40' }],
       },
       maxWidth: {
         'card-list':  '1200px',
-        'prose-body': '680px',
+        'prose-body': '728px',
         'hero-inner': '970px',
-        'article':    '880px',
+        'article':    '928px',
+        'content':    '748px',
+      },
+      maxHeight: {
+        'cover':       '780px',
+        'block-image': '480px',
+      },
+      height: {
+        'placeholder': '320px',
+      },
+      lineHeight: {
+        'tight':    '1.18',
+        'prose':    '1.75',
+        'h1':       '1.20',
+        'h2':       '1.28',
       },
       spacing: {
         '4.5': '1.125rem',

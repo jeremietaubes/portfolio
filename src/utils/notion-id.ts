@@ -7,7 +7,19 @@ function richTextToString(richText: any[]): string {
   return richText.map((t: any) => t.plain_text).join("");
 }
 
-// Preserves bold and italic annotations as HTML
+const NOTION_BG_COLORS: Record<string, string> = {
+  yellow_background:  "#FBF3DB",
+  blue_background:    "#D3E5EF",
+  green_background:   "#DDEDEA",
+  red_background:     "#FFE2DD",
+  purple_background:  "#E8DEEE",
+  pink_background:    "#F5E0E9",
+  gray_background:    "#E3E2DF",
+  brown_background:   "#EEEAE4",
+  orange_background:  "#FAEBDD",
+};
+
+// Preserves bold, italic and background color annotations as HTML
 function richTextToHtml(richText: any[]): string {
   return richText.map((t: any) => {
     let text = t.plain_text
@@ -17,6 +29,8 @@ function richTextToHtml(richText: any[]): string {
       .replace(/\n/g, "<br>");
     if (t.annotations?.bold) text = `<strong>${text}</strong>`;
     if (t.annotations?.italic) text = `<em>${text}</em>`;
+    const bgColor = t.annotations?.color && NOTION_BG_COLORS[t.annotations.color];
+    if (bgColor) text = `<mark style="background:${bgColor};border-radius:3px;padding:0 2px;">${text}</mark>`;
     return text;
   }).join("");
 }
@@ -41,10 +55,14 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
 
   for (const block of blocks) {
     switch (block.type) {
-      case "heading_2":
-      case "heading_3": {
-        const text = richTextToString(block[block.type].rich_text);
+      case "heading_2": {
+        const text = richTextToString(block.heading_2.rich_text);
         if (text) result.push({ type: "heading", text });
+        break;
+      }
+      case "heading_3": {
+        const text = richTextToString(block.heading_3.rich_text);
+        if (text) result.push({ type: "heading3", text });
         break;
       }
       case "callout": {
@@ -84,13 +102,13 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
         break;
       }
       case "quote": {
-        let text = richTextToString(block.quote.rich_text);
+        let text = richTextToHtml(block.quote.rich_text);
         if (!text && block.has_children) {
           const children = await fetchChildren(block.id);
           text = children
             .filter((c: any) => c.type === "paragraph")
-            .map((c: any) => richTextToString(c.paragraph.rich_text))
-            .join(" ");
+            .map((c: any) => richTextToHtml(c.paragraph.rich_text))
+            .join("<br>");
         }
         if (text) result.push({ type: "quote", text });
 

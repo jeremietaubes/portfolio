@@ -24,11 +24,11 @@ const { caseStudy, content, prev, next } = Astro.props;
 
 <!-- Title + summary + tags -->
 <header class="max-w-article mx-auto px-6 pt-8 pb-8">
-  <h1 class="font-display text-display-sm md:text-display tracking-tight-xl text-ink mb-4">
+  <h1 class="font-display font-semibold text-display-sm md:text-display text-ink mb-4 leading-h1">
     {caseStudy.title}
   </h1>
   {caseStudy.summary && (
-    <p class="text-lg text-ink-soft leading-relaxed mb-4" set:html={caseStudy.summary} />
+    <p class="font-reading text-xl leading-prose text-ink-soft mb-4" set:html={caseStudy.summary} />
   )}
   {caseStudy.tags.length > 0 && (
     <div class="flex flex-wrap gap-2 mb-5">
@@ -63,19 +63,18 @@ const { caseStudy, content, prev, next } = Astro.props;
     <img
       src={caseStudy.coverImage}
       alt={caseStudy.title}
-      class="w-full object-cover rounded-2xl bg-border-light"
-      style="max-height:780px;"
+      class="w-full object-cover rounded-2xl bg-border-light max-h-cover"
     />
   </div>
 ) : (
   <div class="px-6 max-w-5xl mx-auto">
-    <div class="w-full rounded-2xl bg-border-light" style="height:320px;"></div>
+    <div class="w-full rounded-2xl bg-border-light h-placeholder"></div>
   </div>
 )}
 
 <!-- Rich content -->
 {content.length > 0 && (
-  <div class="pt-6 pb-24" style="line-height:1.75;">
+  <div class="pt-6 pb-24 leading-prose">
     {content.map((block) => {
       if (block.type === 'image') {
         return (
@@ -83,8 +82,7 @@ const { caseStudy, content, prev, next } = Astro.props;
             <img
               src={block.url}
               alt=""
-              class="w-full object-cover rounded-2xl bg-border-light ring-1 ring-border-light"
-              style="max-height:480px;"
+              class="w-full object-cover rounded-2xl bg-border-light ring-1 ring-border-light max-h-block-image"
               loading="lazy"
             />
           </div>
@@ -92,15 +90,22 @@ const { caseStudy, content, prev, next } = Astro.props;
       }
       if (block.type === 'heading') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mb-6">
-            <h2 class="font-display text-section-h md:text-display-sm text-ink mt-6 mb-0 tracking-normal">{block.text}</h2>
+          <div class="max-w-prose-body mx-auto px-6 mb-8">
+            <h2 class="font-display font-semibold text-section-h md:text-display-sm text-ink mt-6 mb-0 tracking-normal leading-h2">{block.text}</h2>
+          </div>
+        );
+      }
+      if (block.type === 'heading3') {
+        return (
+          <div class="max-w-prose-body mx-auto px-6 mb-4">
+            <h3 class="font-display font-semibold text-[20px] text-ink mt-4 mb-0 leading-h2 ![letter-spacing:0em]">{block.text}</h3>
           </div>
         );
       }
       if (block.type === 'subtitle') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mt-10 -mb-1">
-            <p class="pl-4 border-l border-border-warm text-sm font-sans text-ink-muted font-normal py-2">{block.text}</p>
+          <div class="max-w-prose-body mx-auto px-6 mt-16 -mb-1">
+            <p class="pl-4 border-l border-border-warm text-base font-sans text-ink-muted font-normal py-2">{block.text}</p>
           </div>
         );
       }
@@ -109,35 +114,33 @@ const { caseStudy, content, prev, next } = Astro.props;
           <div class="max-w-prose-body mx-auto px-6 mb-2">
             <p class="numbered-item">
               <span class="num-badge">{block.num}</span>
-              <span set:html={block.text} />
+              <span class="font-reading" set:html={block.text} />
             </p>
           </div>
         );
       }
       if (block.type === 'paragraph') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mb-6">
-            <p class="text-base text-ink-soft" set:html={block.text} />
+          <div class="max-w-prose-body mx-auto px-6 mb-8">
+            <p class="font-reading text-xl leading-prose text-ink-soft" set:html={block.text} />
           </div>
         );
       }
       if (block.type === 'quote') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mb-6">
-            <blockquote class="border-l-2 border-ink pl-5 italic text-ink-soft text-lg">
-              {block.text}
-            </blockquote>
+          <div class="max-w-prose-body mx-auto px-6 mb-8">
+            <blockquote class="border-l-2 border-ink-muted pl-5 text-ink-soft font-reading text-xl leading-prose" set:html={block.text} />
           </div>
         );
       }
       if (block.type === 'bullet_list') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mb-6">
+          <div class="max-w-prose-body mx-auto px-6 mb-8">
             <ul class="space-y-2 pl-1">
               {block.items.map((item) => (
-                <li class="flex items-start gap-3 text-base text-ink-soft">
+                <li class="flex items-start gap-3 text-xl text-ink-soft">
                   <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
-                  <span set:html={item} />
+                  <span class="font-reading" set:html={item} />
                 </li>
               ))}
             </ul>
@@ -146,24 +149,24 @@ const { caseStudy, content, prev, next } = Astro.props;
       }
       if (block.type === 'callout') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mb-6">
-            <div class="bg-white ring-1 ring-border-warm rounded-2xl px-8 py-6 flex gap-4 items-start">
+          <div class="max-w-prose-body mx-auto px-6 mb-8">
+            <div class="bg-white ring-1 ring-border-warm rounded-2xl px-10 py-8 flex gap-4 items-start">
               {block.emoji && (
                 <span class="text-2xl shrink-0 mt-0.5">{block.emoji}</span>
               )}
-              <p class="text-base text-ink-soft leading-relaxed" set:html={block.text} />
+              <p class="font-reading text-xl leading-prose text-ink-soft" set:html={block.text} />
             </div>
           </div>
         );
       }
       if (block.type === 'numbered_list') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mb-6">
+          <div class="max-w-prose-body mx-auto px-6 mb-8">
             <ol class="space-y-2 pl-1 list-none">
               {block.items.map((item, i) => (
-                <li class="flex items-start gap-3 text-base text-ink-soft">
+                <li class="flex items-start gap-3 text-xl text-ink-soft">
                   <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
-                  <span set:html={item} />
+                  <span class="font-reading" set:html={item} />
                 </li>
               ))}
             </ol>
@@ -181,8 +184,8 @@ const { caseStudy, content, prev, next } = Astro.props;
     gap: 12px;
     margin: 8px 0;
     margin-left: -16px;
-    font-size: 16px;
-    color: #5A5A4E;
+    font-size: 20px;
+    color: #3D3D3A;
     line-height: 1.65;
   }
   :global(.sub-list) {
@@ -236,7 +239,7 @@ const { caseStudy, content, prev, next } = Astro.props;
   .num-badge {
     min-width: 24px;
     height: 24px;
-    background: #1A1A16;
+    background: #141413;
     color: #FFFFFF;
     font-size: 11px;
     font-weight: 500;
@@ -253,14 +256,14 @@ const { caseStudy, content, prev, next } = Astro.props;
 {(prev || next) && (
   <div class="max-w-card-list mx-auto px-6 mb-16 pt-8 border-t border-border-warm flex justify-between gap-4">
     {prev ? (
-      <a href={`/case/${prev.slug}`} title={prev.title} class="flex-1 md:flex-none inline-flex items-center gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150">
-        ← <span class="line-clamp-2 md:line-clamp-1 max-w-[42ch]">{prev.title}</span>
+      <a href={`/case/${prev.slug}`} title={prev.title} class="flex-1 min-w-0 inline-flex items-center gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150 overflow-hidden">
+        <span class="shrink-0">←</span><span class="truncate">{prev.title}</span>
       </a>
-    ) : <span class="flex-1 md:flex-none" />}
+    ) : <span class="flex-1" />}
     {next ? (
-      <a href={`/case/${next.slug}`} title={next.title} class="flex-1 md:flex-none inline-flex items-center justify-end gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150">
-        <span class="line-clamp-2 md:line-clamp-1 max-w-[42ch]">{next.title}</span> →
+      <a href={`/case/${next.slug}`} title={next.title} class="flex-1 min-w-0 inline-flex items-center justify-end gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150 overflow-hidden">
+        <span class="truncate text-right">{next.title}</span><span class="shrink-0">→</span>
       </a>
-    ) : <span class="flex-1 md:flex-none" />}
+    ) : <span class="flex-1" />}
   </div>
 )}

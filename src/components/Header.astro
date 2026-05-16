@@ -3,7 +3,7 @@
 
 <header class="sticky top-0 z-50 bg-cream border-b border-border-warm">
   <div class="flex items-center justify-between px-10 py-4.5">
-    <a href="/" class="nav-link font-display font-medium" style="font-size:16px;color:#141413;">Jérémie Taubes - Lead Product Designer</a>
+    <a href="/" class="font-display font-semibold text-[15px] text-ink">Jérémie Taubes - Lead Product Designer</a>
 
     <nav class="hidden md:flex items-center gap-1">
       <a href="/#work" class="nav-link">Work</a>
@@ -12,14 +12,14 @@
       <a href="https://www.linkedin.com/in/jeremie-taubes" target="_blank" rel="noopener noreferrer" class="nav-link">LinkedIn</a>
       <a href="mailto:jeremie.taubes@gmail.com" class="nav-link-btn">
         Contact
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-left:5px;"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline align-[-1px] ml-[5px]"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
       </a>
     </nav>
 
     <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Ouvrir le menu">
-      <span id="bar1" class="block w-5 bg-ink" style="height:1px;transition:transform .15s ease,opacity .15s ease;"></span>
-      <span id="bar2" class="block w-5 bg-ink" style="height:1px;transition:opacity .15s ease;"></span>
-      <span id="bar3" class="block w-5 bg-ink" style="height:1px;transition:transform .15s ease;"></span>
+      <span id="bar1" class="block w-5 h-px bg-ink transition-[transform,opacity] duration-150 ease-in-out"></span>
+      <span id="bar2" class="block w-5 h-px bg-ink transition-opacity duration-150 ease-in-out"></span>
+      <span id="bar3" class="block w-5 h-px bg-ink transition-transform duration-150 ease-in-out"></span>
     </button>
   </div>
 
@@ -31,7 +31,7 @@
       <a href="https://www.linkedin.com/in/jeremie-taubes" target="_blank" rel="noopener noreferrer" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150 pl-4">LinkedIn</a>
       <a href="mailto:jeremie.taubes@gmail.com" class="nav-link-btn-mobile">
         Contact
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-left:5px;"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline align-[-1px] ml-[5px]"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
       </a>
 
     </nav>
@@ -50,13 +50,13 @@
   }
   .nav-link:hover,
   .nav-link.active {
-    background: #F0EFED;
-    border-color: #E2E0DC;
-    color: #1A1A16;
+    background: #F7F5F0;
+    border-color: #E0DED6;
+    color: #141413;
   }
   .nav-link-btn {
     font-size: 13px;
-    color: #FAFAF8;
+    color: #FAFAF7;
     background: #141413;
     padding: 6px 14px;
     border-radius: 20px;
@@ -70,7 +70,7 @@
   }
   .nav-link-btn-mobile {
     font-size: 14px;
-    color: #FAFAF8;
+    color: #FAFAF7;
     background: #141413;
     padding: 8px 16px;
     border-radius: 20px;

@@ -36,11 +36,11 @@ const { title, description, tags, client, year, coverImage, slug, location } = A
   <div class="p-7">
     <!-- Client -->
     {client && (
-      <p class="font-display font-normal text-ink mb-2" style="font-size:14px;">{client}</p>
+      <p class="font-sans font-normal text-ink text-sm mb-2">{client}</p>
     )}
 
     <!-- Title -->
-    <h2 class="font-display text-section-h text-ink mb-3 tracking-tight-xl">{title}</h2>
+    <h2 class="font-display font-semibold text-card-h text-ink mb-3">{title}</h2>
 
     <!-- Tags -->
     {tags.length > 0 && (

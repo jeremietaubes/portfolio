@@ -62,6 +62,18 @@ function richTextToString(richText: any[]): string {
   return richText.map((t: any) => t.plain_text).join("");
 }
 
+const NOTION_BG_COLORS: Record<string, string> = {
+  yellow_background:  "#FBF3DB",
+  blue_background:    "#D3E5EF",
+  green_background:   "#DDEDEA",
+  red_background:     "#FFE2DD",
+  purple_background:  "#E8DEEE",
+  pink_background:    "#F5E0E9",
+  gray_background:    "#E3E2DF",
+  brown_background:   "#EEEAE4",
+  orange_background:  "#FAEBDD",
+};
+
 function richTextToHtml(richText: any[]): string {
   return richText.map((t: any) => {
     let text = t.plain_text
@@ -71,6 +83,8 @@ function richTextToHtml(richText: any[]): string {
       .replace(/\n/g, "<br>");
     if (t.annotations?.bold) text = `<strong>${text}</strong>`;
     if (t.annotations?.italic) text = `<em>${text}</em>`;
+    const bgColor = t.annotations?.color && NOTION_BG_COLORS[t.annotations.color];
+    if (bgColor) text = `<mark style="background:${bgColor};border-radius:3px;padding:0 2px;">${text}</mark>`;
     return text;
   }).join("");
 }
@@ -87,9 +101,7 @@ function notionPageToCaseStudy(page: any): CaseStudy {
 
   return {
     id: page.id,
-    slug: props.Slug?.rich_text?.length
-      ? richTextToString(props.Slug.rich_text)
-      : pageToSlug(richTextToString(props.Nom.title)),
+    slug: page.id.replace(/-/g, ""),
     title: richTextToString(props.Nom.title),
     summary: richTextToHtml(props.Summary?.rich_text ?? []),
     client: richTextToString(props.Client?.rich_text ?? []),
@@ -244,7 +256,7 @@ const CACHE_TTL = import.meta.env.DEV ? 0 : 60_000;
 
 export async function getAllCaseStudies(): Promise<CaseStudy[]> {
   if (!import.meta.env.NOTION_API_KEY || !import.meta.env.NOTION_DATABASE_ID) {
-    return MOCK_CASE_STUDIES;
+    return [];
   }
 
   if (cacheAll && Date.now() - cacheAll.ts < CACHE_TTL) return cacheAll.data;
@@ -264,8 +276,8 @@ export async function getAllCaseStudies(): Promise<CaseStudy[]> {
     cacheAll = { data, ts: Date.now() };
     return data;
   } catch (err) {
-    console.warn("[notion] getAllCaseStudies failed, using mock data:", (err as Error).message);
-    return MOCK_CASE_STUDIES;
+    console.warn("[notion] getAllCaseStudies failed:", (err as Error).message);
+    return [];
   }
 }
 
