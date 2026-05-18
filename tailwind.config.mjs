@@ -36,8 +36,8 @@ export default {
       },
       maxWidth: {
         'card-list':  '1200px',
-        'prose-body': '728px',
-        'hero-inner': '970px',
+        'prose-body': '776px',
+        'hero-inner': '1080px',
         'article':    '928px',
         'content':    '748px',
       },
@@ -58,7 +58,7 @@ export default {
         '4.5': '1.125rem',
       },
       minHeight: {
-        'hero': '60vh',
+        'hero': '68vh',
       },
     }
   },

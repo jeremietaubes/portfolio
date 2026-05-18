@@ -3,28 +3,227 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import NotionContent from "@/components/NotionContent.astro";
-import { getContentById, getPageTitle } from "@/utils/notion-id";
+import { getContentById } from "@/utils/notion-id";
+import type { ContentBlock } from "@/types/case-study";
 
 const PAGE_ID = "362abc1d446d805d8a1ffd0cec67381f";
-const [title, content] = await Promise.all([getPageTitle(PAGE_ID), getContentById(PAGE_ID)]);
+const content = await getContentById(PAGE_ID);
+
+const cardIdx = content.findIndex((b: ContentBlock) => b.type === "card_group");
+// Remonter jusqu'au heading qui précède le card_group pour l'exclure du hero
+let splitIdx = cardIdx;
+if (cardIdx > 0) {
+  for (let i = cardIdx - 1; i >= 0; i--) {
+    if (content[i].type === "heading" || content[i].type === "heading3") {
+      splitIdx = i;
+      break;
+    }
+    if (content[i].type !== "divider") break;
+  }
+}
+const introContent: ContentBlock[] = splitIdx >= 0 ? content.slice(0, splitIdx) : content;
+const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : [];
 ---
 
 <Layout title="About — Jérémie Taubes">
   <Header />
   <main class="px-10 pt-12 pb-18 min-h-screen">
-    {title && (
-      <div class="max-w-hero-inner mx-auto px-6 mb-10">
-        <h1 class="font-display font-semibold text-display-sm md:text-display text-ink leading-h1">{title}</h1>
+
+    <!-- Hero banner (même structure que Hero.astro) -->
+    <section class="about-hero -mx-10 -mt-12">
+      <div class="flex flex-col md:flex-row items-center gap-8 md:gap-20 w-full max-w-hero-inner">
+        <div class="shrink-0">
+          <img
+            src="/images/photo.webp"
+            alt="Jérémie Taubes"
+            class="about-hero-photo rounded-full object-cover bg-white/10"
+          />
+        </div>
+        <div class="leading-prose">
+          {introContent.map((block) => {
+            if (block.type === "paragraph") return <p class="font-reading text-lg leading-prose text-white mb-6" set:html={block.text} />;
+            if (block.type === "heading") return <h2 class="font-display font-semibold text-section-h md:text-display-sm text-white mt-6 mb-2 tracking-normal leading-h2">{block.text}</h2>;
+            if (block.type === "heading3") return <h3 class="font-display font-semibold text-lg text-white mb-2 leading-h2 ![letter-spacing:0em]">{block.text}</h3>;
+            if (block.type === "subtitle") return <p class="pl-4 border-l border-white/50 text-sm font-sans text-white font-normal py-2 mb-4">{block.text}</p>;
+            if (block.type === "quote") return <blockquote class="border-l-2 border-white/30 pl-5 text-white font-reading text-lg leading-prose mb-6" set:html={block.text} />;
+            return null;
+          })}
+          <div class="flex gap-3 mt-4">
+            <a href="https://drive.google.com/file/d/1CQmfQsRKS4hd-aNF8bl6r1GaOeidruFC/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="inline-block border border-white/30 text-white text-sm font-medium px-6 py-3 rounded-full hover:opacity-85 transition-opacity duration-150">Télécharger le CV<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline align-[-1px] ml-[5px]"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a>
+            <a href="https://www.linkedin.com/in/jeremie-taubes" target="_blank" rel="noopener noreferrer" class="inline-block border border-white/30 text-white text-sm font-medium px-6 py-3 rounded-full hover:opacity-85 transition-opacity duration-150">Voir sur LinkedIn<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline align-[-1px] ml-[5px]"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+          </div>
+        </div>
       </div>
-    )}
-    <div class="leading-prose">
-      <NotionContent content={content} maxWidth="max-w-hero-inner" />
+    </section>
+
+    <!-- Skills + Certifications (Notion) -->
+    <div class="about-content">
+      <NotionContent content={restContent} maxWidth="max-w-hero-inner" />
     </div>
-    <div class="max-w-hero-inner mx-auto px-6 mt-10 pb-4 pt-8 border-t border-border-warm flex justify-end">
-      <a href="/#work" class="inline-block bg-ink text-cream text-sm font-medium px-6 py-3 rounded-full hover:opacity-85 transition-opacity duration-150">
-        Selected work →
-      </a>
-    </div>
+
+    <div class="max-w-hero-inner mx-auto px-6 mt-10 pb-4 pt-10 border-t border-border-warm"></div>
+    <!-- <a href="/" class="inline-flex items-center gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150"><span>←</span><span>Selected work</span></a>
+    <a href="/certifications" class="inline-flex items-center gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150"><span>Certifications</span><span>→</span></a> -->
+
   </main>
   <Footer />
 </Layout>
+
+<style>
+  /* --- Hero banner --- */
+  .about-hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    background: #141413;
+  }
+
+  .about-hero-photo {
+    width: 280px;
+    height: 280px;
+  }
+
+  /* --- Skill icons (applied to card_group DOM after JS transform) --- */
+  :global(.skill-card-header) {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  :global(.skill-icon) {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  :global(.skill-icon svg) {
+    width: 20px;
+    height: 24px;
+  }
+
+  :global(.skill-icon.strategy) { background: #F0E6F5; color: #8A3A9A; }
+  :global(.skill-icon.craft)    { background: #E6EDF0; color: #3A5A6A; }
+  :global(.skill-icon.lead)     { background: #EAF0E6; color: #3A6A4A; }
+
+  :global(.skill-title) {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: #141413;
+    line-height: 1.28;
+    letter-spacing: 0;
+    margin: 0;
+  }
+
+  :global(.card-body li) {
+    font-size: 20px !important;
+  }
+
+  /* Espacement section */
+  .about-content {
+    padding-top: 52px;
+  }
+
+  .about-content :global(div:has(> hr)) {
+    margin-top: 32px !important;
+  }
+
+  /* Tailles réduites pour skills + certifications */
+  .about-content :global(p.font-reading),
+  .about-content :global(p.font-sans) {
+    font-size: 20px !important;
+  }
+
+.about-content :global(h2.font-display) {
+    margin-top: 16px !important;
+  }
+
+  .about-content :global(h3.font-display) {
+    font-size: 17px !important;
+  }
+
+  .about-content :global(li .font-reading),
+  .about-content :global(li .font-sans) {
+    font-size: 20px !important;
+  }
+
+  :global(.card-header),
+  :global(.card-body) {
+    padding-left: 0 !important;
+  }
+
+  :global(.card-header) {
+    border-bottom: none !important;
+    padding-bottom: 24px !important;
+  }
+
+  :global(.card-body) {
+    padding-top: 0 !important;
+  }
+
+
+</style>
+
+<script>
+  const titleMap: Record<string, { cls: string; label: string; svg: string }> = {
+    "stratégie": {
+      cls: "strategy",
+      label: "Stratégie",
+      svg: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/><line x1="8" y1="2" x2="8" y2="4"/></svg>`,
+    },
+    "craft": {
+      cls: "craft",
+      label: "Craft",
+      svg: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 2.5l3 3L5 14H2v-3L10.5 2.5z"/><line x1="8.5" y1="4.5" x2="11.5" y2="7.5"/></svg>`,
+    },
+    "leadership": {
+      cls: "lead",
+      label: "Leadership",
+      svg: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="2.5"/><circle cx="3" cy="12" r="2"/><circle cx="13" cy="12" r="2"/><line x1="8" y1="7.5" x2="3" y2="10"/><line x1="8" y1="7.5" x2="13" y2="10"/></svg>`,
+    },
+  };
+
+  document.querySelectorAll<HTMLElement>(".card-content").forEach((el) => {
+    const wrapper = el.parentElement;
+    if (wrapper) {
+      wrapper.style.background = "transparent";
+      wrapper.style.border = "none";
+      wrapper.style.borderRadius = "0";
+      wrapper.style.overflow = "visible";
+    }
+    const grid = wrapper?.parentElement;
+    if (grid) {
+      grid.style.gap = "80px";
+      const groupWrapper = grid.parentElement;
+      if (groupWrapper) {
+        groupWrapper.style.marginTop = "0px";
+        groupWrapper.style.marginBottom = "96px";
+        const prevEl = groupWrapper.previousElementSibling as HTMLElement | null;
+        if (prevEl) prevEl.style.marginBottom = "20px";
+      }
+    }
+  });
+
+  document.querySelectorAll<HTMLElement>(".card-h3").forEach((h3) => {
+    const text = (h3.textContent?.trim() ?? "").toLowerCase().normalize("NFC");
+    for (const [keyword, config] of Object.entries(titleMap)) {
+      if (text.includes(keyword)) {
+        const cardHeader = h3.closest(".card-header");
+        if (cardHeader) {
+          cardHeader.innerHTML = `
+            <div class="skill-card-header">
+              <div class="skill-icon ${config.cls}">${config.svg}</div>
+              <span class="skill-title">${config.label}</span>
+            </div>
+          `;
+        }
+        break;
+      }
+    }
+  });
+</script>

@@ -53,8 +53,12 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
                   </ol>
                 );
                 if (b.type === 'callout') return (
-                  <div class="bg-white ring-1 ring-border-warm rounded-2xl px-10 py-8 flex gap-4 items-start">
-                    {b.emoji && <span class="text-2xl shrink-0 mt-0.5">{b.emoji}</span>}
+                  <div class="bg-white ring-1 ring-border-warm shadow-md rounded-2xl px-10 py-8 flex gap-4 items-start">
+                    <div class="notion-callout-icon shrink-0 mt-1">
+                      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="10" cy="10" r="8.5"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
+                      </svg>
+                    </div>
                     <p class={`${bodyFont} ${textSize} leading-prose text-ink-soft`} set:html={b.text} />
                   </div>
                 );
@@ -122,7 +126,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
   if (block.type === 'paragraph') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
-        <p class={`${bodyFont} text-xl leading-prose text-ink-soft`} set:html={block.text} />
+        <p class={`${bodyFont} text-xl leading-prose text-ink-soft max-w-[870px]`} set:html={block.text} />
       </div>
     );
   }
@@ -185,10 +189,12 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
   if (block.type === 'callout') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
-        <div class="bg-white ring-1 ring-border-warm rounded-2xl px-10 py-8 flex gap-4 items-start">
-          {block.emoji && (
-            <span class="text-2xl shrink-0 mt-0.5">{block.emoji}</span>
-          )}
+        <div class="bg-white ring-1 ring-border-warm shadow-md rounded-2xl px-10 py-8 flex gap-4 items-start">
+          <div class="notion-callout-icon shrink-0 mt-1">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10" cy="10" r="8.5"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
           <p class={`${bodyFont} text-xl leading-prose text-ink-soft`} set:html={block.text} />
         </div>
       </div>
@@ -197,6 +203,21 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
 })}
 
 <style>
+  .notion-callout-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #F0EEE8;
+    color: #141413;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .notion-callout-icon svg {
+    width: 18px;
+    height: 18px;
+  }
   :global(.card-header) {
     padding: 20px 24px;
     border-bottom: 1px solid #E0DED6;

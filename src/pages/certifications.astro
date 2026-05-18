@@ -1,0 +1,45 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import NotionContent from "@/components/NotionContent.astro";
+import { getContentById } from "@/utils/notion-id";
+
+const PAGE_ID = "362abc1d446d8072b0efda3c0c747f8f";
+const content = await getContentById(PAGE_ID);
+---
+
+<Layout title="Certifications — Jérémie Taubes">
+  <Header />
+  <main class="px-10 pt-12 pb-18 min-h-screen">
+    <div class="edu-content leading-prose">
+      <NotionContent content={content} maxWidth="max-w-hero-inner" />
+    </div>
+    <div class="max-w-hero-inner mx-auto px-6 mt-10 pb-4 pt-8 border-t border-border-warm"></div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .edu-content :global(p.font-reading),
+  .edu-content :global(p.font-sans) {
+    font-size: 18px !important;
+  }
+
+  .edu-content :global(h2.font-display) {
+    margin-top: 16px !important;
+  }
+
+  .edu-content :global(h3.font-display) {
+    font-size: 17px !important;
+  }
+
+  .edu-content :global(li .font-reading),
+  .edu-content :global(li .font-sans) {
+    font-size: 18px !important;
+  }
+
+  :global(.card-body li) {
+    font-size: 18px !important;
+  }
+</style>

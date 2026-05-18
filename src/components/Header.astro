@@ -3,12 +3,15 @@
 
 <header class="sticky top-0 z-50 bg-cream border-b border-border-warm">
   <div class="flex items-center justify-between px-10 py-4.5">
-    <a href="/" class="font-display font-semibold text-[15px] text-ink">Jérémie Taubes - Lead Product Designer</a>
+    <a href="/" class="flex items-center gap-3 font-display font-semibold text-[15px] text-ink">
+      <span class="jt-logo">JT</span>
+      Jérémie Taubes - Lead Product Designer
+    </a>
 
     <nav class="hidden lg:flex items-center gap-1">
       <a href="/#work" class="nav-link">Work</a>
       <a href="/about" class="nav-link">About</a>
-      <a href="/education" class="nav-link">Education</a>
+      <a href="/certifications" class="nav-link">Certifications</a>
       <a href="https://www.linkedin.com/in/jeremie-taubes" target="_blank" rel="noopener noreferrer" class="nav-link">LinkedIn</a>
       <a href="mailto:jeremie.taubes@gmail.com" class="nav-link-btn">
         Contact
@@ -27,7 +30,7 @@
     <nav class="flex flex-col px-10 py-6 gap-5">
       <a href="/#work" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150 pl-4">Work</a>
       <a href="/about" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150 pl-4">About</a>
-      <a href="/education" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150 pl-4">Education</a>
+      <a href="/certifications" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150 pl-4">Certifications</a>
       <a href="https://www.linkedin.com/in/jeremie-taubes" target="_blank" rel="noopener noreferrer" class="text-sm text-ink-muted hover:text-ink transition-colors duration-150 pl-4">LinkedIn</a>
       <a href="mailto:jeremie.taubes@gmail.com" class="nav-link-btn-mobile">
         Contact
@@ -39,6 +42,29 @@
 </header>
 
 <style>
+  @keyframes logo-colors {
+    0%   { background: #C45C7A; border-radius: 72% 28% 38% 62% / 40% 55% 45% 60%; }
+    20%  { background: #B8572A; border-radius: 45% 55% 65% 35% / 55% 40% 60% 45%; }
+    40%  { background: #141413; border-radius: 60% 40% 50% 50% / 35% 65% 35% 65%; }
+    60%  { background: #6B2D4E; border-radius: 35% 65% 30% 70% / 60% 45% 55% 40%; }
+    80%  { background: #1E5A6A; border-radius: 50% 50% 45% 55% / 45% 55% 50% 50%; }
+    100% { background: #C45C7A; border-radius: 72% 28% 38% 62% / 40% 55% 45% 60%; }
+  }
+  .jt-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 72% 28% 38% 62% / 40% 55% 45% 60%;
+    animation: logo-colors 20s ease-in-out infinite;
+    color: #FAFAF7;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
   .nav-link {
     font-size: 14px;
     color: #6B6B6B;
