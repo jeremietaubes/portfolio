@@ -27,10 +27,10 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
 
 <Layout title="About — Jérémie Taubes">
   <Header />
-  <main class="px-10 pt-12 pb-18 min-h-screen">
+  <main class="px-4 md:px-10 pt-8 md:pt-12 pb-12 md:pb-18 min-h-screen">
 
     <!-- Hero banner (même structure que Hero.astro) -->
-    <section class="about-hero -mx-10 -mt-12">
+    <section class="about-hero -mx-4 md:-mx-10 -mt-8 md:-mt-12">
       <div class="flex flex-col md:flex-row items-center gap-8 md:gap-20 w-full max-w-hero-inner">
         <div class="shrink-0">
           <img
@@ -48,7 +48,7 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
             if (block.type === "quote") return <blockquote class="border-l-2 border-white/30 pl-5 text-white font-reading text-lg leading-prose mb-6" set:html={block.text} />;
             return null;
           })}
-          <div class="flex gap-3 mt-4">
+          <div class="flex flex-col sm:flex-row gap-3 mt-4 text-center sm:text-left">
             <a href="https://drive.google.com/file/d/1CQmfQsRKS4hd-aNF8bl6r1GaOeidruFC/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="inline-block border border-white/30 text-white text-sm font-medium px-6 py-3 rounded-full hover:opacity-85 transition-opacity duration-150">Télécharger le CV<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline align-[-1px] ml-[5px]"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a>
             <a href="https://www.linkedin.com/in/jeremie-taubes" target="_blank" rel="noopener noreferrer" class="inline-block border border-white/30 text-white text-sm font-medium px-6 py-3 rounded-full hover:opacity-85 transition-opacity duration-150">Voir sur LinkedIn<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline align-[-1px] ml-[5px]"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
           </div>
@@ -75,13 +75,26 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 80px 40px;
+    padding: 28px 16px;
     background: #141413;
   }
 
+  @media (min-width: 640px) {
+    .about-hero {
+      padding: 44px 40px;
+    }
+  }
+
   .about-hero-photo {
-    width: 280px;
-    height: 280px;
+    width: 180px;
+    height: 180px;
+  }
+
+  @media (min-width: 768px) {
+    .about-hero-photo {
+      width: 280px;
+      height: 280px;
+    }
   }
 
   /* --- Skill icons (applied to card_group DOM after JS transform) --- */
@@ -126,7 +139,7 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
 
   /* Espacement section */
   .about-content {
-    padding-top: 52px;
+    padding-top: 32px;
   }
 
   .about-content :global(div:has(> hr)) {
@@ -152,9 +165,31 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
     font-size: 20px !important;
   }
 
+  :global(.skill-grid) {
+    gap: 6px;
+  }
+  :global(.skill-group) {
+    margin-top: 0px;
+    margin-bottom: 24px;
+  }
+  @media (min-width: 768px) {
+    :global(.skill-grid) {
+      gap: 80px;
+    }
+    :global(.skill-group) {
+      margin-bottom: 96px;
+    }
+  }
+
   :global(.card-header),
   :global(.card-body) {
     padding-left: 0 !important;
+  }
+
+  @media (max-width: 767px) {
+    :global(.card-body) {
+      padding-bottom: 12px !important;
+    }
   }
 
   :global(.card-header) {
@@ -198,11 +233,10 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
     }
     const grid = wrapper?.parentElement;
     if (grid) {
-      grid.style.gap = "80px";
+      grid.classList.add("skill-grid");
       const groupWrapper = grid.parentElement;
       if (groupWrapper) {
-        groupWrapper.style.marginTop = "0px";
-        groupWrapper.style.marginBottom = "96px";
+        groupWrapper.classList.add("skill-group");
         const prevEl = groupWrapper.previousElementSibling as HTMLElement | null;
         if (prevEl) prevEl.style.marginBottom = "20px";
       }

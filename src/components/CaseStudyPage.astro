@@ -13,7 +13,7 @@ const { caseStudy, content, prev, next } = Astro.props;
 ---
 
 <!-- Back link -->
-<div class="max-w-article mx-auto px-6 pt-10">
+<div class="max-w-article mx-auto px-6 pt-5 md:pt-10">
   <a
     href="/"
     class="inline-flex items-center gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150"
@@ -23,7 +23,7 @@ const { caseStudy, content, prev, next } = Astro.props;
 </div>
 
 <!-- Title + summary + tags -->
-<header class="max-w-article mx-auto px-6 pt-8 pb-8">
+<header class="max-w-article mx-auto px-6 pt-4 pb-8 md:pt-8">
   <h1 class="font-display font-semibold text-display-sm md:text-display text-ink mb-4 leading-h1">
     {caseStudy.title}
   </h1>
@@ -37,7 +37,7 @@ const { caseStudy, content, prev, next } = Astro.props;
       ))}
     </div>
   )}
-  <div class="border-t border-border-warm mt-6 pt-6 flex justify-between">
+  <div class="border-t border-border-warm mt-6 pt-6 flex flex-wrap justify-between gap-4">
     {caseStudy.client && (
       <div class="flex items-center gap-3">
         <div class="meta-icon" style="background:#E4D4EE; color:#141413;">
@@ -86,11 +86,11 @@ const { caseStudy, content, prev, next } = Astro.props;
 
 <!-- Rich content -->
 {content.length > 0 && (
-  <div class="pt-6 pb-24 leading-prose">
+  <div class="pt-4 pb-12 md:pt-6 md:pb-24 leading-prose">
     {content.map((block) => {
       if (block.type === 'image') {
         return (
-          <div class="px-6 max-w-5xl mx-auto mb-14 mt-14">
+          <div class="px-6 max-w-5xl mx-auto mb-6 mt-6 md:mb-14 md:mt-14">
             <img
               src={block.url}
               alt=""
@@ -162,7 +162,7 @@ const { caseStudy, content, prev, next } = Astro.props;
       if (block.type === 'callout') {
         return (
           <div class="max-w-prose-body mx-auto px-6 mb-8">
-            <div class="bg-white ring-1 ring-border-warm shadow-md rounded-2xl px-10 py-8 flex gap-4 items-start">
+            <div class="bg-white ring-1 ring-border-warm shadow-md rounded-2xl px-5 md:px-10 py-8 flex gap-4 items-start">
               <div class="callout-icon shrink-0 mt-1">
                 <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="10" cy="10" r="8.5"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
@@ -296,16 +296,16 @@ const { caseStudy, content, prev, next } = Astro.props;
 
 <!-- Bottom navigation -->
 {(prev || next) && (
-  <div class="max-w-card-list mx-auto px-6 mb-16 pt-8 border-t border-border-warm flex justify-between gap-4">
+  <div class="max-w-card-list mx-auto px-6 mb-12 md:mb-16 pt-8 border-t border-border-warm flex flex-col sm:flex-row sm:justify-between gap-4">
     {prev ? (
-      <a href={`/case/${prev.slug}`} title={prev.title} class="flex-1 min-w-0 inline-flex items-center gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150 overflow-hidden">
+      <a href={`/case/${prev.slug}`} title={prev.title} class="sm:flex-1 min-w-0 inline-flex items-center gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150 overflow-hidden">
         <span class="shrink-0">←</span><span class="truncate">{prev.title}</span>
       </a>
-    ) : <span class="flex-1" />}
+    ) : <span class="sm:flex-1" />}
     {next ? (
-      <a href={`/case/${next.slug}`} title={next.title} class="flex-1 min-w-0 inline-flex items-center justify-end gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150 overflow-hidden">
-        <span class="truncate text-right">{next.title}</span><span class="shrink-0">→</span>
+      <a href={`/case/${next.slug}`} title={next.title} class="sm:flex-1 min-w-0 inline-flex items-center sm:justify-end gap-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full hover:opacity-85 transition-opacity duration-150 overflow-hidden">
+        <span class="truncate sm:text-right">{next.title}</span><span class="shrink-0">→</span>
       </a>
-    ) : <span class="flex-1" />}
+    ) : <span class="sm:flex-1" />}
   </div>
 )}
