@@ -294,10 +294,25 @@ const { caseStudy, content, prev, next } = Astro.props;
   }
 </style>
 
+<dialog id="img-lightbox" style="margin:0;padding:0;border:none;background:#141413;width:100%;height:100%;max-width:100%;max-height:100%;display:flex;align-items:center;justify-content:center;">
+  <img id="img-lightbox-src" src="" alt="" style="max-width:100%;max-height:100%;object-fit:contain;touch-action:pinch-zoom;" />
+</dialog>
+
 <script>
-  import mediumZoom from 'medium-zoom';
   if (window.matchMedia('(max-width: 639px)').matches) {
-    mediumZoom('.zoomable-image', { margin: 0, background: '#141413' });
+    const dialog = document.getElementById('img-lightbox') as HTMLDialogElement;
+    const dialogImg = document.getElementById('img-lightbox-src') as HTMLImageElement;
+
+    document.querySelectorAll('.zoomable-image').forEach((img) => {
+      (img as HTMLElement).style.cursor = 'zoom-in';
+      img.addEventListener('click', () => {
+        dialogImg.src = (img as HTMLImageElement).src;
+        dialogImg.alt = (img as HTMLImageElement).alt;
+        dialog.showModal();
+      });
+    });
+
+    dialog.addEventListener('click', () => dialog.close());
   }
 </script>
 
