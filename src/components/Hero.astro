@@ -20,19 +20,19 @@
           <div class="hero-skill-icon" style="background:#D6EAD2; color:#141413;">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="2.5"/><circle cx="3" cy="12" r="2"/><circle cx="13" cy="12" r="2"/><line x1="8" y1="7.5" x2="3" y2="10"/><line x1="8" y1="7.5" x2="13" y2="10"/></svg>
           </div>
-          <span class="text-sm md:text-base font-display font-normal text-ink">Leadership</span>
+          <span class="text-[13px] md:text-base font-display font-normal text-ink">Leadership</span>
         </div>
         <div class="flex items-center gap-2" >
           <div class="hero-skill-icon" style="background:#E4D4EE; color:#141413;">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8.5"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/></svg>
           </div>
-          <span class="text-sm md:text-base font-display font-normal text-ink">Stratégie</span>
+          <span class="text-[13px] md:text-base font-display font-normal text-ink">Stratégie</span>
         </div>
         <div class="flex items-center gap-2" >
           <div class="hero-skill-icon" style="background:#D4E2EC; color:#141413;">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,4 4,12 12,12"/><circle cx="4" cy="4" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
           </div>
-          <span class="text-sm md:text-base font-display font-normal text-ink">Craft</span>
+          <span class="text-[13px] md:text-base font-display font-normal text-ink">Craft</span>
         </div>
       </div>
       <h1 class="font-display font-semibold leading-tight text-ink mb-4.5 text-3xl md:text-display md:text-display-xl">
@@ -57,17 +57,28 @@
 
 <style>
   .hero-skill-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
   .hero-skill-icon svg {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
+  }
+  @media (min-width: 640px) {
+    .hero-skill-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+    }
+    .hero-skill-icon svg {
+      width: 20px;
+      height: 20px;
+    }
   }
   .hero-photo {
     width: 180px;
