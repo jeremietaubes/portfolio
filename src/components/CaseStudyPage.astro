@@ -28,7 +28,7 @@ const { caseStudy, content, prev, next } = Astro.props;
     {caseStudy.title}
   </h1>
   {caseStudy.summary && (
-    <p class="font-reading text-xl leading-prose text-ink-soft mb-4" set:html={caseStudy.summary} />
+    <p class="font-reading text-base sm:text-xl leading-prose text-ink-soft mb-4" set:html={caseStudy.summary} />
   )}
   {caseStudy.tags.length > 0 && (
     <div class="flex flex-wrap gap-2 mb-5">
@@ -134,14 +134,14 @@ const { caseStudy, content, prev, next } = Astro.props;
       if (block.type === 'paragraph') {
         return (
           <div class="max-w-prose-body mx-auto px-6 mb-6">
-            <p class="font-reading text-xl leading-prose text-ink-soft" set:html={block.text} />
+            <p class="font-reading text-base sm:text-xl leading-prose text-ink-soft" set:html={block.text} />
           </div>
         );
       }
       if (block.type === 'quote') {
         return (
           <div class="max-w-prose-body mx-auto px-6 mb-8">
-            <blockquote class="border-l-2 border-ink-muted pl-5 text-ink-soft font-reading text-xl leading-prose" set:html={block.text} />
+            <blockquote class="border-l-2 border-ink-muted pl-5 text-ink-soft font-reading text-base sm:text-xl leading-prose" set:html={block.text} />
           </div>
         );
       }
@@ -150,7 +150,7 @@ const { caseStudy, content, prev, next } = Astro.props;
           <div class="max-w-prose-body mx-auto px-6 mb-8">
             <ul class="space-y-2 pl-1">
               {block.items.map((item) => (
-                <li class="flex items-start gap-3 text-xl text-ink-soft">
+                <li class="flex items-start gap-3 text-base sm:text-xl text-ink-soft">
                   <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
                   <span class="font-reading" set:html={item} />
                 </li>
@@ -168,7 +168,7 @@ const { caseStudy, content, prev, next } = Astro.props;
                   <circle cx="10" cy="10" r="8.5"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
                 </svg>
               </div>
-              <p class="font-reading text-xl leading-prose text-ink-soft" set:html={block.text} />
+              <p class="font-reading text-base sm:text-xl leading-prose text-ink-soft" set:html={block.text} />
             </div>
           </div>
         );
@@ -178,7 +178,7 @@ const { caseStudy, content, prev, next } = Astro.props;
           <div class="max-w-prose-body mx-auto px-6 mb-8">
             <ol class="space-y-2 pl-1 list-none">
               {block.items.map((item, i) => (
-                <li class="flex items-start gap-3 text-xl text-ink-soft">
+                <li class="flex items-start gap-3 text-base sm:text-xl text-ink-soft">
                   <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
                   <span class="font-reading" set:html={item} />
                 </li>
@@ -294,9 +294,33 @@ const { caseStudy, content, prev, next } = Astro.props;
   }
 </style>
 
-<dialog id="img-lightbox" style="margin:0;padding:0;border:none;background:#141413;width:100%;height:100%;max-width:100%;max-height:100%;display:flex;align-items:center;justify-content:center;">
-  <img id="img-lightbox-src" src="" alt="" style="max-width:100%;max-height:100%;object-fit:contain;touch-action:pinch-zoom;" />
+<dialog id="img-lightbox">
+  <img id="img-lightbox-src" src="" alt="" />
 </dialog>
+
+<style>
+  #img-lightbox {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: #141413;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  #img-lightbox[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #img-lightbox-src {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    touch-action: pinch-zoom;
+  }
+</style>
 
 <script>
   if (window.matchMedia('(max-width: 639px)').matches) {
