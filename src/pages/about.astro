@@ -41,11 +41,11 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
         </div>
         <div class="leading-prose">
           {introContent.map((block) => {
-            if (block.type === "paragraph") return <p class="font-reading text-lg leading-prose text-white mb-6" set:html={block.text} />;
+            if (block.type === "paragraph") return <p class="font-reading text-base sm:text-lg leading-prose text-white mb-6" set:html={block.text} />;
             if (block.type === "heading") return <h2 class="font-display font-semibold text-section-h md:text-display-sm text-white mt-6 mb-2 tracking-normal leading-h2">{block.text}</h2>;
             if (block.type === "heading3") return <h3 class="font-display font-semibold text-lg text-white mb-2 leading-h2 ![letter-spacing:0em]">{block.text}</h3>;
             if (block.type === "subtitle") return <p class="pl-4 border-l border-white/50 text-sm font-sans text-white font-normal py-2 mb-4">{block.text}</p>;
-            if (block.type === "quote") return <blockquote class="border-l-2 border-white/30 pl-5 text-white font-reading text-lg leading-prose mb-6" set:html={block.text} />;
+            if (block.type === "quote") return <blockquote class="border-l-2 border-white/30 pl-5 text-white font-reading text-base sm:text-lg leading-prose mb-6" set:html={block.text} />;
             return null;
           })}
           <div class="flex flex-col sm:flex-row gap-3 mt-4 text-center sm:text-left">
@@ -134,7 +134,7 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
   }
 
   :global(.card-body li) {
-    font-size: 20px !important;
+    font-size: 16px !important;
   }
 
   /* Espacement section */
@@ -149,10 +149,10 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
   /* Tailles réduites pour skills + certifications */
   .about-content :global(p.font-reading),
   .about-content :global(p.font-sans) {
-    font-size: 20px !important;
+    font-size: 16px !important;
   }
 
-.about-content :global(h2.font-display) {
+  .about-content :global(h2.font-display) {
     margin-top: 16px !important;
   }
 
@@ -162,7 +162,23 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
 
   .about-content :global(li .font-reading),
   .about-content :global(li .font-sans) {
-    font-size: 20px !important;
+    font-size: 16px !important;
+  }
+
+  @media (min-width: 640px) {
+    :global(.card-body li) {
+      font-size: 20px !important;
+    }
+
+    .about-content :global(p.font-reading),
+    .about-content :global(p.font-sans) {
+      font-size: 20px !important;
+    }
+
+    .about-content :global(li .font-reading),
+    .about-content :global(li .font-sans) {
+      font-size: 20px !important;
+    }
   }
 
   :global(.skill-grid) {

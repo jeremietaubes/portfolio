@@ -92,6 +92,8 @@ async function parseBlocks(blocks: any[], prefetch: Map<string, any[]> = new Map
   let inCard = false;
   let cardHeader = "";
   const cardBody: string[] = [];
+  let inBand = false;
+  const bandLines: string[] = [];
 
   function flushCard() {
     if (!cardHeader && !cardBody.length) return;
@@ -162,6 +164,22 @@ async function parseBlocks(blocks: any[], prefetch: Map<string, any[]> = new Map
         if (inCard) {
           const html = richTextToHtml(block.paragraph.rich_text);
           if (html) cardBody.push(html);
+          break;
+        }
+        if (plain === "[band]") {
+          inBand = true;
+          bandLines.length = 0;
+          break;
+        }
+        if (plain === "[/band]") {
+          inBand = false;
+          if (bandLines.length) result.push({ type: "band", text: bandLines.join("<br><br>") });
+          bandLines.length = 0;
+          break;
+        }
+        if (inBand) {
+          const html = richTextToHtml(block.paragraph.rich_text);
+          if (html) bandLines.push(html);
           break;
         }
         const match = plain.match(/^>>(\d+)\s*([\s\S]*)$/);

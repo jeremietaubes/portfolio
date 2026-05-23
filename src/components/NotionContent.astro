@@ -18,7 +18,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
         <div class="grid gap-8 column-grid" style={`grid-template-columns: repeat(${block.columns.length}, minmax(0, 1fr))`}>
           {block.columns.map((col, colIndex) => {
             const isRight = colIndex > 0;
-            const textSize = "text-xl";
+            const textSize = "text-base sm:text-xl";
             return (
             <div class={isRight ? "space-y-4" : "space-y-1"}>
               {col.map((b) => {
@@ -126,14 +126,14 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
   if (block.type === 'paragraph') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
-        <p class={`${bodyFont} text-xl leading-prose text-ink-soft max-w-[870px]`} set:html={block.text} />
+        <p class={`${bodyFont} text-base sm:text-xl leading-prose text-ink-soft max-w-[870px]`} set:html={block.text} />
       </div>
     );
   }
   if (block.type === 'quote') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
-        <blockquote class={`border-l-2 border-ink-muted pl-5 text-ink-soft ${bodyFont} text-xl leading-prose`} set:html={block.text} />
+        <blockquote class={`border-l-2 border-ink-muted pl-5 text-ink-soft ${bodyFont} text-base sm:text-xl leading-prose`} set:html={block.text} />
       </div>
     );
   }
@@ -162,7 +162,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
         ) : (
           <ul class="space-y-2 pl-1">
             {block.items.map((item) => (
-              <li class="flex items-start gap-3 text-xl text-ink-soft">
+              <li class="flex items-start gap-3 text-base sm:text-xl text-ink-soft">
                 <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
                 <span class="font-reading" set:html={item} />
               </li>
@@ -177,7 +177,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
         <ol class="space-y-2 pl-1 list-none">
           {block.items.map((item, i) => (
-            <li class="flex items-start gap-3 text-xl text-ink-soft">
+            <li class="flex items-start gap-3 text-base sm:text-xl text-ink-soft">
               <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
               <span class="font-reading" set:html={item} />
             </li>
@@ -195,7 +195,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
               <circle cx="10" cy="10" r="8.5"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
             </svg>
           </div>
-          <p class={`${bodyFont} text-xl leading-prose text-ink-soft`} set:html={block.text} />
+          <p class={`${bodyFont} text-base sm:text-xl leading-prose text-ink-soft`} set:html={block.text} />
         </div>
       </div>
     );

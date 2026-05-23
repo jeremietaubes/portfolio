@@ -25,4 +25,5 @@ export type ContentBlock =
   | { type: "numbered_item"; num: string; text: string }
   | { type: "divider" }
   | { type: "column_list"; columns: ContentBlock[][] }
-  | { type: "card_group"; items: string[] };
+  | { type: "card_group"; items: string[] }
+  | { type: "band"; text: string };

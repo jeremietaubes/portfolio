@@ -71,11 +71,11 @@ const { caseStudy, content, prev, next } = Astro.props;
 
 <!-- Cover image -->
 {caseStudy.coverImage ? (
-  <div class="px-6 max-w-5xl mx-auto">
+  <div class="px-0 md:px-6 max-w-5xl mx-auto">
     <img
       src={caseStudy.coverImage}
       alt={caseStudy.title}
-      class="w-full object-cover rounded-2xl bg-border-light max-h-cover"
+      class="w-full object-cover rounded-none md:rounded-2xl bg-border-light max-h-cover zoomable-image"
     />
   </div>
 ) : (
@@ -111,6 +111,15 @@ const { caseStudy, content, prev, next } = Astro.props;
         return (
           <div class="max-w-prose-body mx-auto px-6 mb-4">
             <h3 class="font-display font-semibold text-[20px] text-ink mt-4 mb-0 leading-h2 ![letter-spacing:0em]">{block.text}</h3>
+          </div>
+        );
+      }
+      if (block.type === 'band') {
+        return (
+          <div class="max-w-prose-body mx-auto px-6 mt-7 mb-7 sm:mt-11 sm:mb-11">
+            <div class="border-[5px] border-[#F0EEE8] rounded-2xl px-5 py-5 sm:px-10 sm:py-8">
+              <p class="font-reading text-base sm:text-xl leading-prose text-ink-muted" set:html={block.text} />
+            </div>
           </div>
         );
       }
@@ -162,7 +171,7 @@ const { caseStudy, content, prev, next } = Astro.props;
       if (block.type === 'callout') {
         return (
           <div class="max-w-prose-body mx-auto px-6 mb-8">
-            <div class="bg-white ring-1 ring-border-warm shadow-md rounded-2xl px-5 md:px-10 py-8 flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
+            <div class="bg-white ring-1 ring-border-warm shadow-md rounded-2xl px-5 md:px-10 pt-5 pb-6 sm:py-8 flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
               <div class="callout-icon shrink-0 sm:mt-1">
                 <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="10" cy="10" r="8.5"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
