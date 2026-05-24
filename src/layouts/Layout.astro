@@ -1,4 +1,6 @@
 ---
+import { Analytics } from '@vercel/analytics/astro';
+
 interface Props {
   title: string;
   description?: string;
@@ -23,6 +25,7 @@ const { title, description = "Jérémie Taubes — Portfolio" } = Astro.props;
   </head>
   <body class="bg-cream text-ink font-sans antialiased">
     <slot />
+    <Analytics />
   </body>
   <style is:global>
     .font-display {
