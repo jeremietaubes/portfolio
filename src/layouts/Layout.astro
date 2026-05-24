@@ -21,6 +21,11 @@ const { title, description = "Jérémie Taubes — Portfolio" } = Astro.props;
       rel="stylesheet"
     />
     <title>{title}</title>
+    <script>
+      if (localStorage.getItem('ga-disable')) {
+        window['ga-disable-G-LTYKL4F30M'] = true;
+      }
+    </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LTYKL4F30M"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
