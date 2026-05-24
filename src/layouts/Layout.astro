@@ -1,5 +1,4 @@
 ---
-import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title: string;
@@ -25,7 +24,7 @@ const { title, description = "Jérémie Taubes — Portfolio" } = Astro.props;
   </head>
   <body class="bg-cream text-ink font-sans antialiased">
     <slot />
-    <Analytics />
+    <script defer src="/_vercel/insights/script.js"></script>
   </body>
   <style is:global>
     .font-display {

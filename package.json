@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@notionhq/client": "^2.2.15",
-    "@vercel/analytics": "^2.0.1",
     "astro": "^4.16.0"
   },
   "devDependencies": {
