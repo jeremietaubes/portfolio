@@ -350,9 +350,9 @@ const { caseStudy, content, prev, next } = Astro.props;
   dialog.addEventListener('close', () => {
     const viewport = document.querySelector('meta[name=viewport]') as HTMLMetaElement;
     viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
-    });
+    }, 300);
   });
 </script>
 
