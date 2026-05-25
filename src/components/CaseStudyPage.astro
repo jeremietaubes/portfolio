@@ -332,21 +332,19 @@ const { caseStudy, content, prev, next } = Astro.props;
 </style>
 
 <script>
-  if (window.matchMedia('(max-width: 639px)').matches) {
-    const dialog = document.getElementById('img-lightbox') as HTMLDialogElement;
-    const dialogImg = document.getElementById('img-lightbox-src') as HTMLImageElement;
+  const dialog = document.getElementById('img-lightbox') as HTMLDialogElement;
+  const dialogImg = document.getElementById('img-lightbox-src') as HTMLImageElement;
 
-    document.querySelectorAll('.zoomable-image').forEach((img) => {
-      (img as HTMLElement).style.cursor = 'zoom-in';
-      img.addEventListener('click', () => {
-        dialogImg.src = (img as HTMLImageElement).src;
-        dialogImg.alt = (img as HTMLImageElement).alt;
-        dialog.showModal();
-      });
+  document.querySelectorAll('.zoomable-image').forEach((img) => {
+    (img as HTMLElement).style.cursor = 'zoom-in';
+    img.addEventListener('click', () => {
+      dialogImg.src = (img as HTMLImageElement).src;
+      dialogImg.alt = (img as HTMLImageElement).alt;
+      dialog.showModal();
     });
+  });
 
-    dialog.addEventListener('click', () => dialog.close());
-  }
+  dialog.addEventListener('click', () => dialog.close());
 </script>
 
 <!-- Bottom navigation -->
