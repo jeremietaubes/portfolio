@@ -8,7 +8,7 @@ function richTextToString(richText: any[]): string {
 }
 
 const NOTION_BG_COLORS: Record<string, string> = {
-  yellow_background:  "#FBF3DB",
+  yellow_background:  "#F0EEE8",
   blue_background:    "#D3E5EF",
   green_background:   "#DDEDEA",
   red_background:     "#FFE2DD",
