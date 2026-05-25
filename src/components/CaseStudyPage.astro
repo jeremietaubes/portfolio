@@ -327,7 +327,8 @@ const { caseStudy, content, prev, next } = Astro.props;
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    touch-action: pinch-zoom;
+    touch-action: none;
+    transform-origin: center center;
   }
 </style>
 
@@ -343,17 +344,42 @@ const { caseStudy, content, prev, next } = Astro.props;
         dialog.showModal();
       });
     });
+
+    let initialDistance = 0;
+    let currentScale = 1;
+    let baseScale = 1;
+
+    function getTouchDistance(touches: TouchList) {
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    dialogImg.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        initialDistance = getTouchDistance(e.touches);
+        baseScale = currentScale;
+      }
+    }, { passive: false });
+
+    dialogImg.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        const distance = getTouchDistance(e.touches);
+        currentScale = Math.min(Math.max(baseScale * (distance / initialDistance), 1), 4);
+        dialogImg.style.transform = `scale(${currentScale})`;
+      }
+    }, { passive: false });
+
+    dialog.addEventListener('close', () => {
+      currentScale = 1;
+      baseScale = 1;
+      dialogImg.style.transform = '';
+    });
   }
 
   dialog.addEventListener('click', () => dialog.close());
-
-  dialog.addEventListener('close', () => {
-    const viewport = document.querySelector('meta[name=viewport]') as HTMLMetaElement;
-    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
-    setTimeout(() => {
-      viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
-    }, 300);
-  });
 </script>
 
 <!-- Bottom navigation -->
