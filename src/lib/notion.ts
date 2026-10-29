@@ -238,8 +238,11 @@ async function parseBlocks(blocks: any[]): Promise<ContentBlock[]> {
         break;
       }
       case "image": {
-        const alt = richTextToString(block.image.caption);
-        const url = alt ? `/images/${alt}` : (
+        // Légende Notion : "fichier.webp | texte alternatif" (le texte alternatif est facultatif)
+        const [fileName, ...altParts] = richTextToString(block.image.caption).trim().split("|");
+        const file = fileName.trim();
+        const alt = altParts.join("|").trim();
+        const url = file ? `/images/${file}` : (
           block.image.type === "external"
             ? block.image.external.url
             : block.image.file.url

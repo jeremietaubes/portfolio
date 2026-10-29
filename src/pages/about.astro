@@ -43,7 +43,7 @@ const restContent: ContentBlock[] = splitIdx >= 0 ? content.slice(splitIdx) : []
         <div class="leading-prose">
           {introContent.map((block) => {
             if (block.type === "paragraph") return <p class="font-reading text-base sm:text-lg leading-prose text-white mb-6" set:html={block.text} />;
-            if (block.type === "heading") return <h2 class="font-display font-semibold text-section-h md:text-display-sm text-white mt-6 mb-2 tracking-normal leading-h2">{block.text}</h2>;
+            if (block.type === "heading") return <h1 class="font-display font-semibold text-section-h md:text-display-sm text-white mt-6 mb-2 tracking-normal leading-h2">{block.text}</h1>;
             if (block.type === "heading3") return <h3 class="font-display font-semibold text-lg text-white mb-2 leading-h2 ![letter-spacing:0em]">{block.text}</h3>;
             if (block.type === "subtitle") return <p class="pl-4 border-l border-white/50 text-sm font-sans text-white font-normal py-2 mb-4">{block.text}</p>;
             if (block.type === "quote") return <blockquote class="border-l-2 border-white/30 pl-5 text-white font-reading text-base sm:text-lg leading-prose mb-6" set:html={block.text} />;

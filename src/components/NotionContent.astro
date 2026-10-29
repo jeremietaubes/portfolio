@@ -5,13 +5,16 @@ interface Props {
   content: ContentBlock[];
   font?: "reading" | "sans";
   maxWidth?: string;
+  /** Affiche le premier titre de la page en H1 (pages sans autre H1) */
+  firstHeadingAsH1?: boolean;
 }
 
-const { content, font = "reading", maxWidth = "max-w-prose-body" } = Astro.props;
+const { content, font = "reading", maxWidth = "max-w-prose-body", firstHeadingAsH1 = false } = Astro.props;
+const firstHeadingIdx = content.findIndex((b) => b.type === "heading");
 const bodyFont = font === "sans" ? "font-sans" : "font-reading";
 ---
 
-{content.map((block) => {
+{content.map((block, i) => {
   if (block.type === 'column_list') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
@@ -63,7 +66,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
                   </div>
                 );
                 if (b.type === 'image') return (
-                  <img src={b.url} alt="" class="w-full object-cover rounded-2xl bg-border-light ring-1 ring-border-light" loading="lazy" />
+                  <img src={b.url} alt={b.alt} class="w-full object-cover rounded-2xl bg-border-light ring-1 ring-border-light" loading="lazy" />
                 );
               })}
             </div>
@@ -85,7 +88,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
       <div class="px-6 max-w-5xl mx-auto mb-14 mt-14">
         <img
           src={block.url}
-          alt=""
+          alt={block.alt}
           class="w-full object-cover rounded-2xl bg-border-light ring-1 ring-border-light max-h-block-image"
           loading="lazy"
         />
@@ -95,7 +98,9 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
   if (block.type === 'heading') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
-        <h2 class="font-display font-semibold text-section-h md:text-display-sm text-ink mt-6 mb-0 tracking-normal leading-h2">{block.text}</h2>
+        {firstHeadingAsH1 && i === firstHeadingIdx
+          ? <h1 class="font-display font-semibold text-section-h md:text-display-sm text-ink mt-6 mb-0 tracking-normal leading-h2">{block.text}</h1>
+          : <h2 class="font-display font-semibold text-section-h md:text-display-sm text-ink mt-6 mb-0 tracking-normal leading-h2">{block.text}</h2>}
       </div>
     );
   }
