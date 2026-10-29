@@ -16,7 +16,7 @@ import { SHOW_CV } from "@/config";
     </div>
 
     <div>
-      <div class="flex flex-wrap gap-2 sm:gap-8 mb-5">
+      <div class="grid grid-cols-[repeat(2,max-content)] gap-x-5 gap-y-3 sm:flex sm:flex-wrap sm:gap-x-8 sm:gap-y-4 mb-5">
         <div class="flex items-center gap-2" >
           <div class="hero-skill-icon" style="background:#F0EEE8; color:#141413;">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8.5"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/></svg>
@@ -35,12 +35,18 @@ import { SHOW_CV } from "@/config";
           </div>
           <span class="text-[13px] md:text-base font-display font-normal text-ink">Leadership</span>
         </div>
+        <div class="flex items-center gap-2" >
+          <div class="hero-skill-icon" style="background:#F0EEE8; color:#141413;">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.6" y="3.6" width="8.8" height="8.8" rx="2"/><rect x="6.6" y="6.6" width="2.8" height="2.8" rx="0.6"/><path d="M8 1.1v2.5M8 12.4v2.5M1.1 8h2.5M12.4 8h2.5"/></svg>
+          </div>
+          <span class="text-[13px] md:text-base font-display font-normal text-ink">IA</span>
+        </div>
       </div>
       <h1 class="font-display font-semibold leading-tight text-ink mb-4.5 text-3xl md:text-display md:text-display-xl">
-        Du besoin terrain à l'interface, je conçois des produits utiles, testés et mesurés.
+        Du besoin terrain à l'interface, je conçois des produits impactants, testés et mesurés.
       </h1>
       <p class="font-reading text-base md:text-xl leading-prose text-ink-soft mb-8">
-        15 ans d'expérience en B2B et B2C, du MVP de start-up aux outils métier d'une banque du CAC 40. Recherche, co-création, prototypage et Design System, avec l'IA comme accélérateur. Ayant évolué vers des responsabilités Lead, j'ai aussi piloté une squad de 5 designers.
+        15 ans d'expérience en B2B et B2C, du MVP de start-up aux outils métier d'une banque du CAC 40. Recherche, co-création, prototypage et Design System. Mon workflow est assisté par l'IA : je donne la direction, vérifie et valide, elle exécute. Ayant évolué vers des responsabilités Lead, j'ai piloté une squad de 5 designers.
       </p>
       <div class="flex flex-col sm:flex-row gap-3 text-center sm:text-left">
         {SHOW_CV && (<a href="https://drive.google.com/file/d/1CQmfQsRKS4hd-aNF8bl6r1GaOeidruFC/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="inline-block border border-border-warm text-ink text-sm font-medium px-6 py-3 rounded-full hover:opacity-85 transition-opacity duration-150">Télécharger le CV<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline align-[-1px] ml-[5px]"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a>)}
