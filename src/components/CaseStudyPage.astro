@@ -335,6 +335,8 @@ const { caseStudy, content, prev, next } = Astro.props;
 <script>
   const dialog = document.getElementById('img-lightbox') as HTMLDialogElement;
   const dialogImg = document.getElementById('img-lightbox-src') as HTMLImageElement;
+  // Évite que la fin d'un geste (pinch ou déplacement) ferme la lightbox
+  let gestureMoved = false;
 
   if (window.matchMedia('(max-width: 639px)').matches) {
     document.querySelectorAll('.zoomable-image').forEach((img) => {
@@ -348,6 +350,12 @@ const { caseStudy, content, prev, next } = Astro.props;
     let initialDistance = 0;
     let currentScale = 1;
     let baseScale = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+    let panStartX = 0;
+    let panStartY = 0;
+    let baseOffsetX = 0;
+    let baseOffsetY = 0;
 
     function getTouchDistance(touches: TouchList) {
       const dx = touches[0].clientX - touches[1].clientX;
@@ -355,31 +363,81 @@ const { caseStudy, content, prev, next } = Astro.props;
       return Math.sqrt(dx * dx + dy * dy);
     }
 
+    // Garde l'image zoomée dans l'écran : on ne peut pas la faire sortir au-delà de ses bords
+    function clampOffset() {
+      const maxX = Math.max((dialogImg.offsetWidth * currentScale - window.innerWidth) / 2, 0);
+      const maxY = Math.max((dialogImg.offsetHeight * currentScale - window.innerHeight) / 2, 0);
+      offsetX = Math.min(Math.max(offsetX, -maxX), maxX);
+      offsetY = Math.min(Math.max(offsetY, -maxY), maxY);
+    }
+
+    function applyTransform() {
+      dialogImg.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${currentScale})`;
+    }
+
     dialogImg.addEventListener('touchstart', (e) => {
+      gestureMoved = false;
       if (e.touches.length === 2) {
         e.preventDefault();
         initialDistance = getTouchDistance(e.touches);
         baseScale = currentScale;
+      } else if (e.touches.length === 1 && currentScale > 1) {
+        e.preventDefault();
+        panStartX = e.touches[0].clientX;
+        panStartY = e.touches[0].clientY;
+        baseOffsetX = offsetX;
+        baseOffsetY = offsetY;
       }
     }, { passive: false });
 
     dialogImg.addEventListener('touchmove', (e) => {
       if (e.touches.length === 2) {
         e.preventDefault();
+        gestureMoved = true;
         const distance = getTouchDistance(e.touches);
         currentScale = Math.min(Math.max(baseScale * (distance / initialDistance), 1), 4);
-        dialogImg.style.transform = `scale(${currentScale})`;
+        clampOffset();
+        applyTransform();
+      } else if (e.touches.length === 1 && currentScale > 1) {
+        e.preventDefault();
+        gestureMoved = true;
+        offsetX = baseOffsetX + (e.touches[0].clientX - panStartX);
+        offsetY = baseOffsetY + (e.touches[0].clientY - panStartY);
+        clampOffset();
+        applyTransform();
       }
     }, { passive: false });
 
-    dialog.addEventListener('close', () => {
+    // Quand on relâche un doigt pendant un pinch, le déplacement reprend depuis le doigt restant
+    dialogImg.addEventListener('touchend', (e) => {
+      if (e.touches.length === 1 && currentScale > 1) {
+        panStartX = e.touches[0].clientX;
+        panStartY = e.touches[0].clientY;
+        baseOffsetX = offsetX;
+        baseOffsetY = offsetY;
+      }
+    });
+
+    function resetZoom() {
       currentScale = 1;
       baseScale = 1;
+      offsetX = 0;
+      offsetY = 0;
       dialogImg.style.transform = '';
-    });
+    }
+
+    // Remise à zéro à l'ouverture aussi, au cas où l'événement close ne serait pas émis
+    document.querySelectorAll('.zoomable-image').forEach((img) => img.addEventListener('click', resetZoom));
+    dialog.addEventListener('close', resetZoom);
   }
 
-  dialog.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', () => {
+    if (gestureMoved) {
+      gestureMoved = false;
+      return;
+    }
+    dialog.close();
+  });
 </script>
 
 <!-- Bottom navigation -->
