@@ -305,6 +305,9 @@ const { caseStudy, content, prev, next } = Astro.props;
 
 <dialog id="img-lightbox">
   <img id="img-lightbox-src" src="" alt="" />
+  <button id="img-lightbox-close" type="button" aria-label="Fermer l'image">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
 </dialog>
 
 <style>
@@ -329,6 +332,22 @@ const { caseStudy, content, prev, next } = Astro.props;
     object-fit: contain;
     touch-action: none;
     transform-origin: center center;
+  }
+  #img-lightbox-close {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    right: calc(env(safe-area-inset-right, 0px) + 12px);
+    z-index: 1;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    -webkit-tap-highlight-color: transparent;
   }
 </style>
 
@@ -430,6 +449,11 @@ const { caseStudy, content, prev, next } = Astro.props;
     document.querySelectorAll('.zoomable-image').forEach((img) => img.addEventListener('click', resetZoom));
     dialog.addEventListener('close', resetZoom);
   }
+
+  document.getElementById('img-lightbox-close')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dialog.close();
+  });
 
   dialog.addEventListener('click', () => {
     if (gestureMoved) {
