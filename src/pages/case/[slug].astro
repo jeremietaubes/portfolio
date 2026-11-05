@@ -21,6 +21,14 @@ if (!caseStudy) {
   return Astro.redirect("/404");
 }
 
+// Image de partage differente de la cover du site, quand la cover ne fonctionne
+// pas en petite vignette (reseaux sociaux, section Selection LinkedIn).
+const SHARE_IMAGES: Record<string, string> = {
+  // Design Sprint : le template plutot que la photo de l'equipe
+  "35aabc1d446d80dd9c5ed52c89ba38ae": "/images/cacib-lead-cadrage-ux.webp",
+};
+const shareImage = SHARE_IMAGES[slug!] ?? caseStudy.coverImage;
+
 const content = await getContentById(caseStudy.id);
 const allCaseStudies = await getAllCaseStudies();
 const currentIndex = allCaseStudies.findIndex((cs) => cs.slug === slug);
@@ -31,7 +39,7 @@ const next = currentIndex < allCaseStudies.length - 1 ? allCaseStudies[currentIn
 <Layout
   title={`${caseStudy.title} — Jérémie Taubes`}
   description={caseStudy.summary}
-  image={caseStudy.coverImage}
+  image={shareImage}
   ogType="article"
 >
   <Header />
