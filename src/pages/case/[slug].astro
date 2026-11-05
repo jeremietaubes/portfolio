@@ -28,7 +28,12 @@ const prev = currentIndex > 0 ? allCaseStudies[currentIndex - 1] : undefined;
 const next = currentIndex < allCaseStudies.length - 1 ? allCaseStudies[currentIndex + 1] : undefined;
 ---
 
-<Layout title={`${caseStudy.title} — Jérémie Taubes`} description={caseStudy.summary}>
+<Layout
+  title={`${caseStudy.title} — Jérémie Taubes`}
+  description={caseStudy.summary}
+  image={caseStudy.coverImage}
+  ogType="article"
+>
   <Header />
   <main>
     <CaseStudyPage

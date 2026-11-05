@@ -3,9 +3,31 @@
 interface Props {
   title: string;
   description?: string;
+  image?: string;
+  ogType?: string;
 }
 
-const { title, description = "Jérémie Taubes — Portfolio" } = Astro.props;
+const {
+  title,
+  description = "Jérémie Taubes — Portfolio",
+  image = "/images/cacib-agent-ux-cover.webp",
+  ogType = "website",
+} = Astro.props;
+
+// Les résumés viennent de Notion en HTML : les métadonnées veulent du texte brut.
+const plainDescription = description
+  .replace(/<br\s*\/?>/gi, " ")
+  .replace(/<[^>]+>/g, "")
+  .replace(/&amp;/g, "&")
+  .replace(/&lt;/g, "<")
+  .replace(/&gt;/g, ">")
+  .replace(/\s+/g, " ")
+  .trim();
+
+// URL absolues, exigées par LinkedIn et les autres aperçus de lien.
+const origin = Astro.site ?? new URL("https://www.jeremietaubes.fr");
+const ogImage = new URL(image, origin).href;
+const ogUrl = new URL(Astro.url.pathname, origin).href;
 ---
 
 <!doctype html>
@@ -13,8 +35,22 @@ const { title, description = "Jérémie Taubes — Portfolio" } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
+    <meta name="description" content={plainDescription} />
     <meta name="robots" content="noindex" />
+    <link rel="canonical" href={ogUrl} />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={plainDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:site_name" content="Jérémie Taubes" />
+    <meta property="og:locale" content="fr_FR" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={plainDescription} />
+    <meta name="twitter:image" content={ogImage} />
     <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
