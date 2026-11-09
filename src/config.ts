@@ -5,4 +5,4 @@
 export const SHOW_LINKEDIN = true;
 
 // Boutons « Télécharger le CV » (accueil et page About)
-export const SHOW_CV = false;
+export const SHOW_CV = true;
