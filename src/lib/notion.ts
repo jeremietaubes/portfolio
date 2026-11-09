@@ -273,10 +273,7 @@ export async function getAllCaseStudies(): Promise<CaseStudy[]> {
   try {
     const response = await notion.databases.query({
       database_id: DATABASE_ID,
-      // En local (npm run dev), on affiche aussi les pages non publiées pour les relire
-      ...(import.meta.env.DEV
-        ? {}
-        : { filter: { property: "Published", checkbox: { equals: true } } }),
+      filter: { property: "Published", checkbox: { equals: true } },
     });
 
     const data = response.results
