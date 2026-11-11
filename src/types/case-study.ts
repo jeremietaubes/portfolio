@@ -5,6 +5,7 @@ export interface CaseStudy {
   summary: string;
   client: string;
   year: string;
+  duration?: string;
   tags: string[];
   coverImage: string;
   location: string;

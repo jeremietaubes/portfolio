@@ -1,4 +1,6 @@
 ---
+import { existsSync } from 'node:fs';
+
 interface Props {
   title: string;
   description: string;
@@ -12,6 +14,13 @@ interface Props {
 }
 
 const { title, description, tags, client, year, coverImage, slug, location } = Astro.props;
+const yearOnly = year?.match(/\d{4}/g)?.at(-1) ?? year;
+
+// Vignette nette : sert une image dimensionnee pour la card plutot que la cover 1600px.
+const thumbBase = coverImage && coverImage.startsWith('/images/')
+  ? coverImage.replace('/images/', '/images/thumbs/').replace(/\.webp$/, '')
+  : '';
+const hasThumb = thumbBase !== '' && existsSync(`public${thumbBase}-640.webp`);
 ---
 
 <a
@@ -22,10 +31,15 @@ const { title, description, tags, client, year, coverImage, slug, location } = A
   <div class="aspect-video overflow-hidden bg-border-light">
     {coverImage ? (
       <img
-        src={coverImage}
+        src={hasThumb ? `${thumbBase}-1280.webp` : coverImage}
+        srcset={hasThumb ? `${thumbBase}-640.webp 640w, ${thumbBase}-1280.webp 1280w` : undefined}
+        sizes="(min-width: 768px) 50vw, 100vw"
+        width="1280"
+        height="720"
         alt={title}
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        class="w-full h-full object-cover"
         loading="lazy"
+        decoding="async"
       />
     ) : (
       <div class="w-full h-full bg-border-light"></div>
@@ -53,7 +67,7 @@ const { title, description, tags, client, year, coverImage, slug, location } = A
 
     <!-- Bottom row: Location · Year + CTA -->
     <div class="mt-5 flex items-center justify-between gap-2">
-      <span class="text-xs text-ink-muted">{[location, year].filter(Boolean).join(' · ')}</span>
+      <span class="text-xs text-ink-muted">{[location, yearOnly].filter(Boolean).join(' · ')}</span>
       <span class="flex items-center gap-1.5 text-sm font-medium text-ink group-hover:gap-3 transition-all duration-150">
         Lire le projet <span class="text-base">→</span>
       </span>

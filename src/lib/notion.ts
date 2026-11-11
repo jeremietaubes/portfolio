@@ -106,6 +106,7 @@ function notionPageToCaseStudy(page: any): CaseStudy {
     summary: richTextToHtml(props.Summary?.rich_text ?? []),
     client: richTextToString(props.Client?.rich_text ?? []),
     year: richTextToString(props.Year?.rich_text ?? []),
+    duration: richTextToString(props.Duration?.rich_text ?? []) || undefined,
     tags: props.Tags?.multi_select?.map((t: any) => t.name) ?? [],
     coverImage: (() => {
       // Champ Text (rich_text) : nom de fichier local, ex: "finbank-cover.webp"
