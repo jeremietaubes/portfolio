@@ -22,7 +22,7 @@ for (const file of covers) {
 
   if (hasMaster) {
     await sharp(src)
-      .resize(1600, 900, { fit: 'cover', kernel: 'lanczos3' })
+      .resize({ width: 1600, kernel: 'lanczos3' })
       .webp({ quality: 88, effort: 6 })
       .toFile(`${IMAGES}/${name}.webp`);
   }

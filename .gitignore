@@ -26,3 +26,6 @@ Thumbs.db
 
 # Sauvegardes locales
 _backups/
+
+# Masters HD de travail (hors site)
+_masters/
