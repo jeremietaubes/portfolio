@@ -21,12 +21,12 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
         <div class="grid gap-8 column-grid" style={`grid-template-columns: repeat(${block.columns.length}, minmax(0, 1fr))`}>
           {block.columns.map((col, colIndex) => {
             const isRight = colIndex > 0;
-            const textSize = "text-base sm:text-xl";
+            const textSize = "text-base sm:text-[17px]";
             return (
             <div class={isRight ? "space-y-4" : "space-y-1"}>
               {col.map((b) => {
                 if (b.type === 'heading') return <h2 class={`font-display font-semibold text-section-h md:text-display-sm text-ink mb-0 tracking-normal leading-h2 ${isRight ? "mt-6" : "mt-0"}`}>{b.text}</h2>;
-                if (b.type === 'heading3') return <h3 class={`font-display font-semibold text-[20px] text-ink mb-0 leading-h2 ![letter-spacing:0em] ${isRight ? "mt-4" : "mt-0"}`}>{b.text}</h3>;
+                if (b.type === 'heading3') return <h3 class={`font-sans font-semibold text-[20px] text-ink mb-0 leading-[1.3] ![letter-spacing:-0.01em] ${isRight ? "mt-4" : "mt-0"}`}>{b.text}</h3>;
                 if (b.type === 'paragraph') return <p class={`${bodyFont} ${textSize} leading-prose text-ink-soft`} set:html={b.text} />;
                 if (b.type === 'quote') return <blockquote class={`border-l-2 border-ink-muted pl-5 text-ink-soft ${bodyFont} ${textSize} leading-prose`} set:html={b.text} />;
                 if (b.type === 'bullet_list') return b.caption?.toLowerCase().includes('pills') ? (
@@ -38,18 +38,18 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
                 ) : (
                   <ul class="space-y-2 pl-1">
                     {b.items.map((item) => (
-                      <li class={`flex items-start gap-3 ${textSize} text-ink-soft`}>
-                        <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
+                      <li class={`flex items-start gap-3 ${textSize} leading-prose text-ink-soft`}>
+                        <span class="mt-[11px] w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
                         <span class={bodyFont} set:html={item} />
                       </li>
                     ))}
                   </ul>
                 );
                 if (b.type === 'numbered_list') return (
-                  <ol class="space-y-2 pl-1 list-none">
+                  <ol class="space-y-3 pl-1 list-none">
                     {b.items.map((item, i) => (
-                      <li class={`flex items-start gap-3 ${textSize} text-ink-soft`}>
-                        <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
+                      <li class={`flex items-start gap-3 ${textSize} leading-prose text-ink-soft`}>
+                        <span class="num-badge">{i + 1}</span>
                         <span class={bodyFont} set:html={item} />
                       </li>
                     ))}
@@ -107,7 +107,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
   if (block.type === 'heading3') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-4`}>
-        <h3 class="font-display font-semibold text-[20px] text-ink mt-4 mb-0 leading-h2 ![letter-spacing:0em]">{block.text}</h3>
+        <h3 class="font-sans font-semibold text-[20px] text-ink mt-4 mb-0 leading-[1.3] ![letter-spacing:-0.01em]">{block.text}</h3>
       </div>
     );
   }
@@ -131,14 +131,14 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
   if (block.type === 'paragraph') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
-        <p class={`${bodyFont} text-base sm:text-xl leading-prose text-ink-soft max-w-[870px]`} set:html={block.text} />
+        <p class={`${bodyFont} text-base sm:text-[17px] leading-prose text-ink-soft max-w-[870px]`} set:html={block.text} />
       </div>
     );
   }
   if (block.type === 'quote') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
-        <blockquote class={`border-l-2 border-ink-muted pl-5 text-ink-soft ${bodyFont} text-base sm:text-xl leading-prose`} set:html={block.text} />
+        <blockquote class={`border-l-2 border-ink-muted pl-5 text-ink-soft ${bodyFont} text-base sm:text-[17px] leading-prose`} set:html={block.text} />
       </div>
     );
   }
@@ -148,7 +148,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {block.items.map((item) => (
             <div class="bg-white rounded-2xl border border-border-warm overflow-hidden">
-              <div class={`${bodyFont} text-base text-ink-soft leading-relaxed card-content`} set:html={item} />
+              <div class={`${bodyFont} text-base sm:text-[17px] text-ink-soft leading-prose card-content`} set:html={item} />
             </div>
           ))}
         </div>
@@ -167,8 +167,8 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
         ) : (
           <ul class="space-y-2 pl-1">
             {block.items.map((item) => (
-              <li class="flex items-start gap-3 text-base sm:text-xl text-ink-soft">
-                <span class="mt-2.5 w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
+              <li class="flex items-start gap-3 text-base sm:text-[17px] leading-prose text-ink-soft">
+                <span class="mt-[11px] w-1 h-1 rounded-full bg-ink-faint shrink-0"></span>
                 <span class="font-reading" set:html={item} />
               </li>
             ))}
@@ -180,10 +180,10 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
   if (block.type === 'numbered_list') {
     return (
       <div class={`${maxWidth} mx-auto px-6 mb-8`}>
-        <ol class="space-y-2 pl-1 list-none">
+        <ol class="space-y-3 pl-1 list-none">
           {block.items.map((item, i) => (
-            <li class="flex items-start gap-3 text-base sm:text-xl text-ink-soft">
-              <span class="shrink-0 font-medium text-ink-faint tabular-nums">{i + 1}.</span>
+            <li class="flex items-start gap-3 text-base sm:text-[17px] leading-prose text-ink-soft">
+              <span class="num-badge">{i + 1}</span>
               <span class="font-reading" set:html={item} />
             </li>
           ))}
@@ -200,7 +200,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
               <circle cx="10" cy="10" r="8.5"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
             </svg>
           </div>
-          <p class={`${bodyFont} text-base sm:text-xl leading-prose text-ink-soft`} set:html={block.text} />
+          <p class={`${bodyFont} text-base sm:text-[17px] leading-prose text-ink-soft`} set:html={block.text} />
         </div>
       </div>
     );
@@ -231,11 +231,11 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
     display: flex;
     align-items: center;
     gap: 14px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-weight: 600;
     font-size: 20px;
     color: #141413;
-    line-height: 1.28;
+    line-height: 1.3;
     letter-spacing: 0;
     margin: 0;
   }
@@ -254,9 +254,9 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 20px;
-    color: #3D3D3A;
-    line-height: 1.4;
+    font-size: 16px;
+    color: #2D2D2A;
+    line-height: 1.6;
   }
   :global(.card-body li)::before {
     content: "";
@@ -280,10 +280,11 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
     gap: 12px;
     margin: 8px 0;
     margin-left: -16px;
-    font-size: 20px;
-    color: #3D3D3A;
-    line-height: 1.65;
+    font-size: 16px;
+    color: #2D2D2A;
+    line-height: 1.6;
   }
+  @media (min-width: 640px) { :global(.card-body li), .numbered-item { font-size: 17px; } }
   :global(.sub-list) {
     list-style: none;
     margin-top: 6px;
@@ -320,7 +321,7 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
     align-items: flex-start;
     gap: 12px;
     font-size: 1rem;
-    color: #3D3D3A;
+    color: #2D2D2A;
   }
   :global(.callout-list li)::before {
     content: "";
@@ -333,17 +334,17 @@ const bodyFont = font === "sans" ? "font-sans" : "font-reading";
     margin-top: 10px;
   }
   .num-badge {
-    min-width: 24px;
-    height: 24px;
+    min-width: 28px;
+    height: 28px;
     background: #141413;
     color: #FFFFFF;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 0;
   }
 </style>
