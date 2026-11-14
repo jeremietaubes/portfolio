@@ -12,50 +12,10 @@ const content = await getContentById(PAGE_ID);
 <Layout title="Certifications — Jérémie Taubes">
   <Header />
   <main class="px-4 md:px-10 pt-8 md:pt-12 pb-12 md:pb-18 min-h-screen">
-    <div class="edu-content leading-prose">
+    <div class="leading-prose [&_h3+p]:!text-sm [&_h3+p]:!text-ink-muted [&_h3+p]:!leading-[1.4] [&_ul]:!space-y-0.5 [&_li]:!leading-[1.4]">
       <NotionContent content={content} maxWidth="max-w-hero-inner" firstHeadingAsH1 />
     </div>
     <div class="max-w-hero-inner mx-auto px-6 mt-10 pb-4 pt-8 border-t border-border-warm"></div>
   </main>
   <Footer />
 </Layout>
-
-<style>
-  .edu-content :global(p.font-reading),
-  .edu-content :global(p.font-sans) {
-    font-size: 16px !important;
-  }
-
-  .edu-content :global(h2.font-display) {
-    margin-top: 16px !important;
-  }
-
-  .edu-content :global(h3) {
-    font-size: 18px !important;
-  }
-
-  .edu-content :global(li .font-reading),
-  .edu-content :global(li .font-sans) {
-    font-size: 16px !important;
-  }
-
-  :global(.card-body li) {
-    font-size: 16px !important;
-  }
-
-  @media (min-width: 640px) {
-    .edu-content :global(p.font-reading),
-    .edu-content :global(p.font-sans) {
-      font-size: 18px !important;
-    }
-
-    .edu-content :global(li .font-reading),
-    .edu-content :global(li .font-sans) {
-      font-size: 18px !important;
-    }
-
-    :global(.card-body li) {
-      font-size: 18px !important;
-    }
-  }
-</style>
