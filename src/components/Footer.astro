@@ -1,9 +1,10 @@
 ---
+const { dark = false } = Astro.props;
 ---
 
-<footer id="contact" class="bg-cream px-4 md:px-10 py-4.5">
+<footer id="contact" class={`px-4 md:px-10 py-4.5 ${dark ? "bg-ink border-t border-cream/15" : "bg-cream"}`}>
   <div class="flex items-center justify-end">
-    <span class="text-[13px] text-ink-muted">
+    <span class={`text-[13px] ${dark ? "text-cream/70" : "text-ink-muted"}`}>
       © {new Date().getFullYear()} Jérémie Taubes
     </span>
   </div>
