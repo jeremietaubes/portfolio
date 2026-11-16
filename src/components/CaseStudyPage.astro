@@ -157,7 +157,7 @@ for (const b of content) {
       }
       if (block.type === 'band') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mt-7 mb-7 sm:mt-11 sm:mb-11">
+          <div class="max-w-prose-body mx-auto px-6 mt-7 mb-7 sm:mt-11 sm:mb-11 md:mt-9 md:mb-9">
             <div class="bg-[#F0EEE8] rounded-lg px-5 py-5 sm:px-7 sm:py-6">
               <p class="font-reading text-base sm:text-[17px] leading-prose text-ink" set:html={block.text} />
             </div>
@@ -190,7 +190,7 @@ for (const b of content) {
       }
       if (block.type === 'quotes') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mt-10 mb-12 md:mb-[72px] space-y-10">
+          <div class="max-w-prose-body mx-auto px-6 mt-10 mb-10 space-y-10">
             {block.items.map((q) => (
               <figure class="verbatim">
                 <blockquote><p>{q.text}</p></blockquote>
@@ -216,7 +216,7 @@ for (const b of content) {
       }
       if (block.type === 'result_tiles') {
         return (
-          <div class="max-w-prose-body mx-auto px-6 mb-8">
+          <div class="max-w-prose-body mx-auto px-6 mt-6 md:mt-8 mb-8">
             <div class={`grid grid-cols-1 gap-3 ${block.items.length === 3 ? "md:grid-cols-3" : "sm:grid-cols-2"}`}>
               {block.items.map((t) => (
                 <div class="result-tile">
@@ -249,21 +249,38 @@ for (const b of content) {
 <style>
   :global(u) { text-decoration-thickness: from-font; text-underline-offset: 3px; }
 
-  /* Verbatim : filet éditorial, sans fond ni guillemet */
+  /* Verbatim : filet éditorial + guillemet posé sur le filet */
   .verbatim {
+    position: relative;
     margin: 0;
     padding: 4px 0 4px 28px;
-    border-left: 2px solid #C1440E;
+    border-left: 3px solid #C1440E;
+  }
+  .verbatim::before {
+    content: "\201C";
+    position: absolute;
+    left: -1.5px;
+    top: -6px;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    text-align: center;
+    background: #FAFAF7;
+    color: #C1440E;
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1;
   }
   .verbatim blockquote { margin: 0; }
   .verbatim p {
     margin: 0;
-    font-family: "Playfair Display", Georgia, serif;
+    font-family: "DM Sans", sans-serif;
     font-style: italic;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 20px;
-    line-height: 1.4;
-    letter-spacing: -0.005em;
+    line-height: 1.55;
     color: #1A1A16;
   }
   .verbatim figcaption {
@@ -272,9 +289,6 @@ for (const b of content) {
     font-size: 14px;
     font-weight: 500;
     color: #6B6A5E;
-  }
-  @media (min-width: 768px) {
-    .verbatim p { font-size: 28px; }
   }
   /* Résultats : tuiles à plat, 2 colonnes */
   .result-tile {
@@ -285,15 +299,24 @@ for (const b of content) {
     border-radius: 8px;
     padding: 22px 20px 24px;
   }
+  .result-tile::before {
+    content: "";
+    width: 28px;
+    height: 3px;
+    background: #C1440E;
+  }
   .result-fig {
     margin: 0;
-    font-family: "DM Sans", sans-serif;
+    font-family: "Playfair Display", Georgia, serif;
     font-size: 22px;
     line-height: 1.2;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -0.01em;
-    color: #1A1A16;
-    font-feature-settings: "lnum", "tnum";
+    color: #141413;
+    font-feature-settings: "lnum";
+  }
+  @media (min-width: 768px) {
+    .result-fig { font-size: 28px; line-height: 1.15; }
   }
   .result-body {
     margin: 0;
