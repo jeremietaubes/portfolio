@@ -83,4 +83,13 @@ const hasThumb = thumbBase !== '' && existsSync(`public${thumbBase}-640.webp`);
     box-shadow: 0 8px 28px rgba(0,0,0,0.12);
     border-color: #D4D0C8;
   }
+  /* Zoom discret de l'image au survol (desktop uniquement) */
+  .card-link img {
+    transition: transform 300ms ease-out;
+  }
+  @media (hover: hover) {
+    .card-link:hover img {
+      transform: scale(1.04);
+    }
+  }
 </style>
